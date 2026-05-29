@@ -1,5 +1,8 @@
 'use client';
 
+import ChevronLeftIcon from '@/components/icons/CustomerChevronLeftIcon';
+import ChevronRightIcon from '@/components/icons/CustomerChevronRightIcon';
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -44,7 +47,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
         disabled={currentPage === 1}
       >
-        &lt;
+        <ChevronLeftIcon className="h-4 w-4" />
       </button>
       {pages.map((p) => (
         <button
@@ -64,7 +67,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
         disabled={currentPage === totalPages}
       >
-        &gt;
+        <ChevronRightIcon className="h-4 w-4" />
       </button>
     </div>
   );

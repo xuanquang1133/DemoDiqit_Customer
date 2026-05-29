@@ -180,6 +180,7 @@
     --color-red-600: #e40014;
     --color-orange-50: #fff7ed;
     --color-blue-600: #155dfc;
+    --color-slate-800: #1d293d;
     --color-gray-50: #f9fafb;
     --color-gray-100: #f3f4f6;
     --color-gray-200: #e5e7eb;
@@ -231,6 +232,7 @@
       --color-red-600: lab(48.4493% 77.4328 61.5452);
       --color-orange-50: lab(97.7008% 1.53738 5.90646);
       --color-blue-600: lab(44.0605% 29.0279 -86.0352);
+      --color-slate-800: lab(16.132% -.318021 -14.6672);
       --color-gray-50: lab(98.2596% -.247031 -.706708);
       --color-gray-100: lab(96.1596% -.082314 -1.13575);
       --color-gray-200: lab(91.6229% -.159085 -2.26791);
@@ -1067,6 +1069,10 @@
     color: var(--color-red-600);
   }
 
+  .text-slate-800 {
+    color: var(--color-slate-800);
+  }
+
   .text-white {
     color: var(--color-white);
   }
@@ -1219,6 +1225,30 @@
     .lg\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
+  }
+
+  .\[\&_svg\]\:h-4 svg {
+    height: calc(var(--spacing) * 4);
+  }
+
+  .\[\&_svg\]\:h-5 svg {
+    height: calc(var(--spacing) * 5);
+  }
+
+  .\[\&_svg\]\:h-6 svg {
+    height: calc(var(--spacing) * 6);
+  }
+
+  .\[\&_svg\]\:w-4 svg {
+    width: calc(var(--spacing) * 4);
+  }
+
+  .\[\&_svg\]\:w-5 svg {
+    width: calc(var(--spacing) * 5);
+  }
+
+  .\[\&_svg\]\:w-6 svg {
+    width: calc(var(--spacing) * 6);
   }
 }
 
