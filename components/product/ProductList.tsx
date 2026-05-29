@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '@/api/product';
+import { getProducts } from '@/api/product/index';
 import ProductCard from './ProductCard';
 import Pagination from './Pagination';
 

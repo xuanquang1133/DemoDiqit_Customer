@@ -2,13 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import ChevronLeftIcon from '@/components/icons/CustomerChevronLeftIcon';
-import InternshopLogo from '@/components/InternshopLogo';
+import InternshopLogo from '@/components/common/InternshopLogo';
 
-interface ProductDetailHeaderProps {
-  title?: string;
-}
-
-export default function ProductDetailHeader({ title = 'INTERNSHOP' }: ProductDetailHeaderProps) {
+export default function ProductDetailHeader() {
   const router = useRouter();
 
   return (

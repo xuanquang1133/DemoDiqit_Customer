@@ -3,14 +3,14 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '@/api/product';
-import { getCategories } from '@/api/category';
+import { getProducts } from '@/api/product/index';
+import { getCategories } from '@/api/category/index';
 import Header from '@/components/layouts/Header';
 import Banner from '@/components/layouts/Banner';
 import ProductCard from '@/components/product/ProductCard';
 import Pagination from '@/components/product/Pagination';
-import ProductFilter from '@/components/ProductFilter';
-import ProductSkeleton from '@/components/ProductSkeleton';
+import ProductFilter from '@/components/common/ProductFilter';
+import ProductSkeleton from '@/components/common/ProductSkeleton';
 
 interface Product {
   id: number;

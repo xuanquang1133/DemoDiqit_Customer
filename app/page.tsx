@@ -1,10 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '@/api/product';
+import { getProducts } from '@/api/product/index';
 import Header from '@/components/layouts/Header';
 import Banner from '@/components/layouts/Banner';
-import ProductSkeleton from '@/components/ProductSkeleton';
+import ProductSkeleton from '@/components/common/ProductSkeleton';
 import ProductCard from '@/components/product/ProductCard';
 
 interface Product {

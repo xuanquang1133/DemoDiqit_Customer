@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchIcon from '@/components/icons/CustomerSearchIcon';
-import InternshopLogo from '@/components/InternshopLogo';
+import InternshopLogo from '@/components/common/InternshopLogo';
 
 export default function Header() {
   const router = useRouter();

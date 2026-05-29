@@ -1,4 +1,4 @@
-import CustomerShoppingBagIcon from './icons/CustomerShoppingBagIcon';
+import CustomerShoppingBagIcon from '@/components/icons/CustomerShoppingBagIcon';
 
 interface InternshopLogoProps {
   className?: string;

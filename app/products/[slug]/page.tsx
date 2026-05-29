@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { getProductBySlug } from '@/api/product';
+import { getProductBySlug } from '@/api/product/index';
 import ProductDetailHeader from '@/components/layouts/ProductDetailHeader';
 import ShoppingBagIcon from '@/components/icons/CustomerShoppingBagIcon';
 import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
