@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { getProductBySlug } from '@/api/product/index';
+import { productApi } from '@/api/product/index';
 import ProductDetailHeader from '@/components/layouts/ProductDetailHeader';
 import ShoppingBagIcon from '@/components/icons/CustomerShoppingBagIcon';
 import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
@@ -15,7 +15,7 @@ export default function ProductDetailPage() {
 
   const { data: productData, isLoading, error } = useQuery({
     queryKey: ['product', slug],
-    queryFn: () => getProductBySlug(slug),
+    queryFn: () => productApi.getProductBySlug(slug),
     enabled: !!slug,
   });
 

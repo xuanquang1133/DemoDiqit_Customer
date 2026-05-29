@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '@/api/product/index';
+import { productApi } from '@/api/product/index';
 import Header from '@/components/layouts/Header';
 import Banner from '@/components/layouts/Banner';
 import ProductSkeleton from '@/components/common/ProductSkeleton';
@@ -18,7 +18,7 @@ interface Product {
 export default function Home() {
   const { data, isLoading } = useQuery({
     queryKey: ['featured-products'],
-    queryFn: () => getProducts({ page: 1, limit: 8 }),
+    queryFn: () => productApi.getProducts({ page: 1, limit: 8 }),
   });
 
   const products = data?.items || [];

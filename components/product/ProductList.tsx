@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '@/api/product/index';
+import { productApi } from '@/api/product/index';
 import ProductCard from './ProductCard';
 import Pagination from './Pagination';
 
@@ -22,7 +22,7 @@ interface Product {
 export default function ProductList({ keyword, categoryIds, page = 1 }: ProductListProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['products', keyword, categoryIds, page],
-    queryFn: () => getProducts({ page, limit: 12, keyword, category_ids: categoryIds }),
+    queryFn: () => productApi.getProducts({ page, limit: 12, keyword, category_ids: categoryIds }),
   });
 
   if (isLoading) return (

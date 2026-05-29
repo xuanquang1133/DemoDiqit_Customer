@@ -3,8 +3,8 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '@/api/product/index';
-import { getCategories } from '@/api/category/index';
+import { productApi } from '@/api/product/index';
+import { categoryApi } from '@/api/category/index';
 import Header from '@/components/layouts/Header';
 import Banner from '@/components/layouts/Banner';
 import ProductCard from '@/components/product/ProductCard';
@@ -32,7 +32,7 @@ export default function ProductsPage() {
 
   const { data: categoriesData } = useQuery({
     queryKey: ['categories'],
-    queryFn: () => getCategories(true),
+    queryFn: () => categoryApi.getCategories(true),
     refetchOnWindowFocus: true,
   });
 
@@ -44,7 +44,7 @@ export default function ProductsPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['products', selectedCategory, page, keyword],
-    queryFn: () => getProducts({
+    queryFn: () => productApi.getProducts({
       page,
       limit: 8,
       keyword: keyword || undefined,
