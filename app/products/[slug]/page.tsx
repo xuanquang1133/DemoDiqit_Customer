@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { getProductBySlug } from '@/api/product';
 import ProductDetailHeader from '@/components/ProductDetailHeader';
+import ShoppingBagIcon from '@/components/icons/CustomerShoppingBagIcon';
+import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -167,37 +169,11 @@ export default function ProductDetailPage() {
             {/* Action Buttons */}
             <div className="flex gap-4 pt-6 mt-6">
               <button className="flex-1 bg-black text-white py-4 px-6 rounded-xl hover:bg-gray-800 transition-colors font-semibold shadow-lg flex items-center justify-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+                <PaperPlaneIcon className="h-5 w-5" />
                 Mua ngay
               </button>
               <button className="flex-1 bg-black text-white py-4 px-6 rounded-xl hover:bg-gray-800 transition-colors font-semibold shadow-lg flex items-center justify-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
+                <ShoppingBagIcon className="h-5 w-5" />
                 Thêm vào giỏ hàng
               </button>
             </div>

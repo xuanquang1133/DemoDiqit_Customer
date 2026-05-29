@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import ChevronLeftIcon from '@/components/icons/CustomerChevronLeftIcon';
+import InternshopLogo from '@/components/InternshopLogo';
 
 interface ProductDetailHeaderProps {
   title?: string;
@@ -19,7 +20,7 @@ export default function ProductDetailHeader({ title = 'INTERNSHOP' }: ProductDet
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <span className="text-xl font-bold">{title}</span>
+        <InternshopLogo size="md" />
       </div>
     </header>
   );

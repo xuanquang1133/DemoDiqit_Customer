@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import EyeIcon from '@/components/icons/CustomerEyeIcon';
-import CartIcon from '@/components/icons/CustomerCartIcon';
 import ShoppingBagIcon from '@/components/icons/CustomerShoppingBagIcon';
+import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
 
 interface ProductCardProps {
   product: {
@@ -56,12 +56,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         <h3 className="font-medium text-sm line-clamp-2 mt-1">{product.name}</h3>
         <p className="text-red-600 font-semibold mt-2">{formattedPrice}đ</p>
         <div className="flex justify-center gap-3 mt-4">
-          {/* Mua - Cart Icon */}
+          {/* Mua ngay - Paper Plane Icon */}
           <button
             className="w-28 h-10 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm flex items-center justify-center gap-2"
             title="Mua ngay"
           >
-          <CartIcon className="h-5 w-5" />
+          <PaperPlaneIcon className="h-5 w-5" />
           </button>
           {/* Thêm vào giỏ hàng - Shopping Bag Icon */}
           <button
