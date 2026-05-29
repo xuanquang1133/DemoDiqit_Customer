@@ -7,8 +7,8 @@ import { productApi } from '@/api/product/index';
 import { categoryApi } from '@/api/category/index';
 import Header from '@/components/layouts/Header';
 import Banner from '@/components/layouts/Banner';
-import ProductCard from '@/components/product/ProductCard';
-import Pagination from '@/components/product/Pagination';
+import ProductCard from '@/components/common/ProductCard';
+import Pagination from '@/components/common/Pagination';
 import ProductFilter from '@/components/common/ProductFilter';
 import ProductSkeleton from '@/components/common/ProductSkeleton';
 

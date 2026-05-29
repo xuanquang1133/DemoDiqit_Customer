@@ -1,4 +1,4 @@
-import CustomerShoppingBagIcon from '@/components/icons/CustomerShoppingBagIcon';
+import CartIcon from '@/components/icons/CartIcon';
 
 interface InternshopLogoProps {
   className?: string;
@@ -14,7 +14,7 @@ export default function InternshopLogo({ className = '', size = 'md' }: Internsh
 
   return (
     <div className={`flex items-center gap-2 font-bold text-slate-800 ${sizeClasses[size]} ${className}`}>
-      <CustomerShoppingBagIcon />
+      <CartIcon />
       <span>InternShop</span>
     </div>
   );

@@ -5,7 +5,7 @@ import { productApi } from '@/api/product/index';
 import Header from '@/components/layouts/Header';
 import Banner from '@/components/layouts/Banner';
 import ProductSkeleton from '@/components/common/ProductSkeleton';
-import ProductCard from '@/components/product/ProductCard';
+import ProductCard from '@/components/common/ProductCard';
 
 interface Product {
   id: number;

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { productApi } from '@/api/product/index';
 import ProductDetailHeader from '@/components/layouts/ProductDetailHeader';
-import ShoppingBagIcon from '@/components/icons/CustomerShoppingBagIcon';
+import CartIcon from '@/components/icons/CartIcon';
 import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
 
 export default function ProductDetailPage() {
@@ -173,7 +173,7 @@ export default function ProductDetailPage() {
                 Mua ngay
               </button>
               <button className="flex-1 bg-black text-white py-4 px-6 rounded-xl hover:bg-gray-800 transition-colors font-semibold shadow-lg flex items-center justify-center gap-2">
-                <ShoppingBagIcon className="h-5 w-5" />
+                <CartIcon className="h-5 w-5" />
                 Thêm vào giỏ hàng
               </button>
             </div>

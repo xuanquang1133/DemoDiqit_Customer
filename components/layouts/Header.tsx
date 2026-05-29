@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchIcon from '@/components/icons/CustomerSearchIcon';
 import InternshopLogo from '@/components/common/InternshopLogo';
+import { useCartStore } from '@/stores/cartStore';
+import CartIcon from '@/components/icons/CartIcon';
 
 export default function Header() {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
+  const itemCount = useCartStore((state) => state.itemCount());
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +49,17 @@ export default function Header() {
             <Link href="/products" className="hover:text-blue-600 transition-colors font-medium">
               All Product
             </Link>
-            <span className="cursor-pointer hover:text-blue-600">Cart (0)</span>
+            <button
+              onClick={() => router.push('/cart')}
+              className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <CartIcon className="h-5 w-5" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  {itemCount}
+                </span>
+              )}
+            </button>
             <span className="cursor-pointer hover:text-blue-600">Login</span>
           </nav>
         </div>
