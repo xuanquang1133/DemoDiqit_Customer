@@ -1,3 +1,10 @@
+# Next.js build output
+.next
+out
+
+# Environment variables
+.env*.local
+
 # Logs
 logs
 *.log
