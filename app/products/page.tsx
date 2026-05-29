@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getProducts } from '@/api/product';
 import { getCategories } from '@/api/category';
@@ -20,22 +20,15 @@ interface Product {
   category?: { id: number; name: string };
 }
 
-interface Category {
-  id: number;
-  name: string;
-  code: string;
-}
-
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const keywordParam = searchParams.get('keyword') || '';
   const categoryParam = searchParams.get('category') || '';
-  const pageParam = Number(searchParams.get('page') || '1');
 
   const [keyword, setKeyword] = useState(keywordParam);
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
-  const [page, setPage] = useState(pageParam);
+  const [page, setPage] = useState(Number(searchParams.get('page') || '1'));
 
   const { data: categoriesData } = useQuery({
     queryKey: ['categories'],
@@ -50,7 +43,7 @@ export default function ProductsPage() {
     : [];
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['products', keyword, selectedCategory, page],
+    queryKey: ['products', selectedCategory, page, keyword],
     queryFn: () => getProducts({
       page,
       limit: 8,
@@ -58,12 +51,6 @@ export default function ProductsPage() {
       category_ids: selectedCategory ? [selectedCategory] : undefined,
     }),
   });
-
-  useEffect(() => {
-    setKeyword(searchParams.get('keyword') || '');
-    setSelectedCategory(searchParams.get('category') || '');
-    setPage(Number(searchParams.get('page') || '1'));
-  }, [searchParams]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

@@ -9,18 +9,30 @@ interface PaginationProps {
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   const handlePrev = () => {
     if (currentPage > 1) {
-      onPageChange ? onPageChange(currentPage - 1) : window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (onPageChange) {
+        onPageChange(currentPage - 1);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   };
 
   const handleNext = () => {
     if (currentPage < totalPages) {
-      onPageChange ? onPageChange(currentPage + 1) : window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (onPageChange) {
+        onPageChange(currentPage + 1);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   };
 
-  const handlePage = (page: number) => {
-    onPageChange ? onPageChange(page) : window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handlePage = (pageNum: number) => {
+    if (onPageChange) {
+      onPageChange(pageNum);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);

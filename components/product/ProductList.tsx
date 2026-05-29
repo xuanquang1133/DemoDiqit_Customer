@@ -11,6 +11,14 @@ interface ProductListProps {
   page?: number;
 }
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  thumbnail: string;
+  category?: { name: string };
+}
+
 export default function ProductList({ keyword, categoryIds, page = 1 }: ProductListProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['products', keyword, categoryIds, page],
@@ -46,7 +54,7 @@ export default function ProductList({ keyword, categoryIds, page = 1 }: ProductL
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((product: any) => (
+            {products.map((product: Product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

@@ -16,7 +16,7 @@ interface Product {
 }
 
 export default function Home() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['featured-products'],
     queryFn: () => getProducts({ page: 1, limit: 8 }),
   });
