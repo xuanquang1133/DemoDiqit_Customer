@@ -2,8 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { getProducts } from '@/api/product';
-import Header from '@/components/Header';
-import Banner from '@/components/Banner';
+import Header from '@/components/layouts/Header';
+import Banner from '@/components/layouts/Banner';
 import ProductSkeleton from '@/components/ProductSkeleton';
 import ProductCard from '@/components/product/ProductCard';
 
