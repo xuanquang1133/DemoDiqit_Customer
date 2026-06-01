@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { productApi } from '@/api/product/index';
 import { categoryApi } from '@/api/category/index';
-import Header from '@/components/layouts/Header';
 import Banner from '@/components/layouts/Banner';
 import ProductCard from '@/components/common/ProductCard';
 import Pagination from '@/components/common/Pagination';
@@ -17,7 +16,7 @@ interface Product {
   name: string;
   price: number;
   thumbnail: string;
-  category?: { id: number; name: string };
+  category?: { id?: number; name?: string };
 }
 
 export default function ProductsPage() {
@@ -37,9 +36,7 @@ export default function ProductsPage() {
   });
 
   const categories = Array.isArray(categoriesData?.data)
-    ? categoriesData.data
-    : Array.isArray(categoriesData?.items)
-    ? categoriesData.items
+    ? categoriesData.data as Array<{ id: number; name: string; code: string }>
     : [];
 
   const { data, isLoading, error } = useQuery({
@@ -75,10 +72,10 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
-
       {/* Hero Banner */}
-      <Banner />
+      <div className="pt-[60px]">
+        <Banner />
+      </div>
 
       {/* Page Content */}
       <div className="max-w-7xl mx-auto px-8 py-8">
