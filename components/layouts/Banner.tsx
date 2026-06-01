@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const IMAGES = [
   '/banners/Banner-1.png',
@@ -16,11 +16,6 @@ export default function Banner() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const mountedRef = useRef(false);
-
-  useEffect(() => {
-    mountedRef.current = true;
-  }, []);
 
   const goToNext = useCallback(() => {
     if (isTransitioning) return;
@@ -35,21 +30,9 @@ export default function Banner() {
   }, [currentIndex, isTransitioning]);
 
   useEffect(() => {
-    if (!mountedRef.current) return;
     const timer = setInterval(goToNext, DISPLAY_DURATION);
     return () => clearInterval(timer);
   }, [goToNext]);
-
-  if (!mountedRef.current) {
-    return (
-      <div
-        className="relative w-full overflow-hidden flex items-center justify-center"
-        style={{ height: 500 }}
-      >
-        <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -93,6 +76,7 @@ export default function Banner() {
             priority
             className="object-contain"
             sizes="100vw"
+            suppressHydrationWarning
           />
         </div>
 
@@ -111,6 +95,7 @@ export default function Banner() {
               priority
               className="object-contain"
               sizes="100vw"
+              suppressHydrationWarning
             />
           </div>
         )}
