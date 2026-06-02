@@ -7,6 +7,7 @@ import EyeIcon from '@/components/icons/CustomerEyeIcon';
 import CartIcon from '@/components/icons/CartIcon';
 import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
 import { useCartStore } from '@/stores/cartStore';
+import { useAuthStore } from '@/stores/authStore';
 import { useFlyToCart } from '@/contexts/FlyToCartContext';
 import toast from 'react-hot-toast';
 
@@ -30,6 +31,7 @@ const ProductCard = forwardRef<ProductCardHandle, ProductCardProps>(
   ({ product }, ref) => {
     const router = useRouter();
     const addItem = useCartStore((s) => s.addItem);
+    const token = useAuthStore((s) => s.token);
     const { triggerFly, cartButtonRef } = useFlyToCart();
     const imageContainerRef = useRef<HTMLDivElement>(null);
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(product.price);
@@ -47,6 +49,29 @@ const ProductCard = forwardRef<ProductCardHandle, ProductCardProps>(
         : `/products/${product.id}`;
       router.push(url);
     };
+
+    const handleBuyNow = useCallback(() => {
+      if (!token) {
+        toast.error('Vui lòng đăng nhập để mua hàng');
+        router.push('/login?redirect=/checkout');
+        return;
+      }
+
+      const { items } = useCartStore.getState();
+      const alreadyInCart = items.some((i) => i.id === product.id);
+
+      if (!alreadyInCart) {
+        addItem({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          thumbnail: product.thumbnail,
+          description: product.description,
+        });
+      }
+
+      router.push('/checkout');
+    }, [product, addItem, router, token]);
 
     const handleAddToCart = useCallback(() => {
       if (imageContainerRef.current && cartButtonRef.current) {
@@ -104,6 +129,7 @@ const ProductCard = forwardRef<ProductCardHandle, ProductCardProps>(
           <p className="text-red-600 font-semibold mt-2">{formattedPrice}đ</p>
           <div className="flex justify-center gap-3 mt-4">
             <button
+              onClick={handleBuyNow}
               className="w-28 h-10 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm flex items-center justify-center gap-2"
               title="Mua ngay"
             >

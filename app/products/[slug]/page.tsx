@@ -8,6 +8,7 @@ import { productApi } from '@/api/product/index';
 import CartIcon from '@/components/icons/CartIcon';
 import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
 import { useCartStore } from '@/stores/cartStore';
+import { useAuthStore } from '@/stores/authStore';
 import { useFlyToCart } from '@/contexts/FlyToCartContext';
 import toast from 'react-hot-toast';
 
@@ -27,6 +28,7 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const slug = params.slug as string;
   const addItem = useCartStore((s) => s.addItem);
+  const token = useAuthStore((s) => s.token);
   const { triggerFly, cartButtonRef } = useFlyToCart();
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +65,29 @@ export default function ProductDetailPage() {
       duration: 2000,
       style: { background: '#16a34a', color: '#fff', fontSize: '14px' },
     });
+  };
+
+  const handleBuyNow = () => {
+    if (!token) {
+      toast.error('Vui lòng đăng nhập để mua hàng');
+      router.push('/login?redirect=/checkout');
+      return;
+    }
+
+    const { items } = useCartStore.getState();
+    const alreadyInCart = items.some((i) => i.id === product!.id);
+
+    if (!alreadyInCart && product) {
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        thumbnail: product.thumbnail,
+        description: product.description,
+      });
+    }
+
+    router.push('/checkout');
   };
 
   if (isLoading) {
@@ -178,7 +203,10 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex gap-4 pt-6 mt-6">
-              <button className="flex-1 bg-black text-white py-4 px-6 rounded-xl hover:bg-gray-800 transition-colors font-semibold shadow-lg flex items-center justify-center gap-2">
+              <button
+                onClick={handleBuyNow}
+                className="flex-1 bg-black text-white py-4 px-6 rounded-xl hover:bg-gray-800 transition-colors font-semibold shadow-lg flex items-center justify-center gap-2"
+              >
                 <PaperPlaneIcon className="h-5 w-5" />
                 Mua ngay
               </button>

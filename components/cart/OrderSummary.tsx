@@ -42,6 +42,7 @@ export default function OrderSummary() {
         </div>
 
         <button
+          onClick={() => router.push('/checkout')}
           className="w-full mt-4 bg-red-500 text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-red-600 transition-colors shadow-md"
         >
           Tiến hành thanh toán

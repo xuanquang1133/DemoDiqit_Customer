@@ -27,13 +27,13 @@ export default function ProductList({ keyword, categoryIds, page = 1 }: ProductL
 
   if (isLoading) return (
     <div className="text-center py-8">
-      <span className="text-gray-500">Loading...</span>
+      <span className="text-gray-500">Đang tải...</span>
     </div>
   );
   
   if (error) return (
     <div className="text-center py-8 text-red-500">
-      Error loading products
+      Lỗi khi tải sản phẩm
     </div>
   );
 
@@ -43,13 +43,13 @@ export default function ProductList({ keyword, categoryIds, page = 1 }: ProductL
     <div>
       <div className="flex justify-between items-center mb-4">
         <span className="text-sm text-gray-500">
-          Showing {products.length} products
+          Hiển thị {products.length} sản phẩm
         </span>
       </div>
 
       {products.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          No products found
+          Không tìm thấy sản phẩm nào
         </div>
       ) : (
         <>
