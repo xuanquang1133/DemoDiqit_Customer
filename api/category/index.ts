@@ -10,8 +10,8 @@ export interface CategoryListResponse {
 
 export const categoryApi = {
   getCategories(isActive?: boolean) {
-    return axiosClient.get<Array<{ id: number; name: string; code?: string }>>('/categories/list-common', {
+    return axiosClient.get<unknown, CategoryListResponse>('/categories/list-common', {
       params: isActive !== undefined ? { is_active: isActive } : {},
-    }).then((res) => res.data);
+    });
   },
 };

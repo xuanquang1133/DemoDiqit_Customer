@@ -45,12 +45,12 @@ function LoginContent() {
         password: formData.password,
       });
 
-      login(res.access_token, {
-        id: res.id,
-        username: res.username,
-        email: res.email,
-        full_name: res.full_name,
-        roles: res.roles,
+      login(res.data.access_token, {
+        id: res.data.id,
+        username: res.data.username,
+        email: res.data.email,
+        full_name: res.data.full_name,
+        roles: res.data.roles,
       });
 
       // Load server cart after login

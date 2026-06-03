@@ -82,12 +82,12 @@ export default function RegisterPage() {
         password: formData.password,
       });
 
-      login(loginRes.access_token, {
-        id: loginRes.id,
-        username: loginRes.username,
-        email: loginRes.email,
-        full_name: loginRes.full_name,
-        roles: loginRes.roles,
+      login(loginRes.data.access_token, {
+        id: loginRes.data.id,
+        username: loginRes.data.username,
+        email: loginRes.data.email,
+        full_name: loginRes.data.full_name,
+        roles: loginRes.data.roles,
       });
 
       toast.success('Đăng ký thành công!');

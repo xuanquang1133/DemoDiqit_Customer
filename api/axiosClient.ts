@@ -1,26 +1,11 @@
-import axios, { type AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
-export interface ApiResponse<T> {
-  message: string;
-  data: T;
-}
-
-type AxiosConfig = AxiosRequestConfig;
-
-interface AxiosClient extends Omit<typeof axios, 'get' | 'post' | 'put' | 'patch' | 'delete'> {
-  get<T>(url: string, config?: AxiosConfig): Promise<ApiResponse<T>>;
-  post<T>(url: string, data?: unknown, config?: AxiosConfig): Promise<ApiResponse<T>>;
-  put<T>(url: string, data?: unknown, config?: AxiosConfig): Promise<ApiResponse<T>>;
-  patch<T>(url: string, data?: unknown, config?: AxiosConfig): Promise<ApiResponse<T>>;
-  delete<T>(url: string, config?: AxiosConfig): Promise<ApiResponse<T>>;
-}
-
-const _axiosClient = axios.create({
+const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1',
   headers: { 'Content-Type': 'application/json' },
 });
 
-_axiosClient.interceptors.request.use((config) => {
+axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -28,8 +13,8 @@ _axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
-_axiosClient.interceptors.response.use(
-  (response) => response,
+axiosClient.interceptors.response.use(
+  (response) => response.data,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('access_token');
@@ -38,6 +23,4 @@ _axiosClient.interceptors.response.use(
   }
 );
 
-const axiosClient: AxiosClient = _axiosClient as unknown as AxiosClient;
-
-export default axiosClient;
+export default axiosClient as AxiosInstance;
