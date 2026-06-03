@@ -27,7 +27,7 @@ export interface SaveCartItem {
 
 export const cartApi = {
   getCart(): Promise<{ cart_items: CartItem[]; total_items: number }> {
-    return axiosClient.get<{ message: string; data: { cart_items: CartItem[]; total_items: number } }>('/cart').then((res) => res.data);
+    return axiosClient.get<{ message: string; data: { cart_items: CartItem[]; total_items: number } }>('/cart').then((res) => res.data.data);
   },
 
   saveCart(items: SaveCartItem[]): Promise<unknown> {
