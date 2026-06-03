@@ -5,14 +5,7 @@ import { productApi } from '@/api/product/index';
 import Banner from '@/components/layouts/Banner';
 import ProductSkeleton from '@/components/common/ProductSkeleton';
 import ProductCard from '@/components/common/ProductCard';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  thumbnail: string;
-  category?: { name: string };
-}
+import { Product } from '@/types/product';
 
 export default function Home() {
   const { data, isLoading } = useQuery({
