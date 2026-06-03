@@ -6,18 +6,11 @@ export default function CustomerPaperPlaneIcon({ className }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 32 32"
       className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-      transform="rotate(30 12 12)"
+      fill="currentColor"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-      />
+      <path d="m29.919 6.163l-4.225 19.925c-.319 1.406-1.15 1.756-2.331 1.094l-6.438-4.744l-3.106 2.988c-.344.344-.631.631-1.294.631l.463-6.556L24.919 8.72c.519-.462-.113-.719-.806-.256l-14.75 9.288l-6.35-1.988c-1.381-.431-1.406-1.381.288-2.044l24.837-9.569c1.15-.431 2.156.256 1.781 2.013z"/>
     </svg>
   );
 }

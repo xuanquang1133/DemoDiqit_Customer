@@ -2,7 +2,7 @@ interface IconProps {
   className?: string;
 }
 
-function CustomerShoppingBagIcon({ className }: IconProps) {
+export default function CartIcon({ className }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,6 +20,3 @@ function CustomerShoppingBagIcon({ className }: IconProps) {
     </svg>
   );
 }
-
-export default CustomerShoppingBagIcon;
-export { CustomerShoppingBagIcon };

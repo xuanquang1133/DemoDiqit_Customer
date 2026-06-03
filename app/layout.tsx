@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import HeaderWrapper from "@/components/HeaderWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "InternShop - Customer",
-  description: "Customer shopping experience",
+  title: "InternShop - Mua sắm",
+  description: "Trải nghiệm mua sắm trực tuyến",
 };
 
 export default function RootLayout({
@@ -30,7 +31,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+        <Providers>
+          <HeaderWrapper>
+            {children}
+          </HeaderWrapper>
+        </Providers>
       </body>
     </html>
   );

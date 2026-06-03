@@ -1,8 +1,16 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1',
   headers: { 'Content-Type': 'application/json' },
+});
+
+axiosClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 axiosClient.interceptors.response.use(
@@ -15,4 +23,4 @@ axiosClient.interceptors.response.use(
   }
 );
 
-export default axiosClient as axios.AxiosInstance;
+export default axiosClient as AxiosInstance;
