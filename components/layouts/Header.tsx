@@ -17,7 +17,8 @@ export default function Header() {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mounted] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const itemCount = useCartStore((state) => state.itemCount());
   const { cartButtonRef } = useFlyToCart();

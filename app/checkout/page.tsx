@@ -26,7 +26,7 @@ interface FormErrors {
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, shipping, clearCart } = useCartStore();
-  const { token, _hasHydrated } = useAuthStore();
+  const { token, user, _hasHydrated } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -43,6 +43,17 @@ export default function CheckoutPage() {
     shipping_address: '',
     notes: '',
   });
+
+  useEffect(() => {
+    if (!_hasHydrated || !user) return;
+    setFormData((prev) => ({
+      customer_name: prev.customer_name || user.full_name || '',
+      customer_email: prev.customer_email || user.email || '',
+      customer_phone: prev.customer_phone || '',
+      shipping_address: prev.shipping_address || '',
+      notes: prev.notes || '',
+    }));
+  }, [_hasHydrated, user]);
 
   const [errors, setErrors] = useState<FormErrors>({});
 
