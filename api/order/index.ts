@@ -53,18 +53,18 @@ export interface PaginatedOrders {
 
 export const orderApi = {
   createOrder(data: CreateOrderRequest): Promise<OrderResponse> {
-    return axiosClient.post<{ message: string; data: OrderResponse }>('/orders', data).then(res => res.data.data);
+    return axiosClient.post<OrderResponse>('/orders', data).then((res) => res.data);
   },
 
   getMyOrders(page = 1, limit = 10): Promise<PaginatedOrders> {
-    return axiosClient.get<{ message: string; data: PaginatedOrders }>(`/my-orders?page=${page}&limit=${limit}`).then(res => res.data.data);
+    return axiosClient.get<PaginatedOrders>(`/my-orders?page=${page}&limit=${limit}`).then((res) => res.data);
   },
 
   getMyOrderDetail(id: number): Promise<OrderResponse> {
-    return axiosClient.get<{ message: string; data: OrderResponse }>(`/my-orders/${id}`).then(res => res.data.data);
+    return axiosClient.get<OrderResponse>(`/my-orders/${id}`).then((res) => res.data);
   },
 
   cancelMyOrder(id: number): Promise<OrderResponse> {
-    return axiosClient.post<{ message: string; data: OrderResponse }>(`/my-orders/${id}/cancel`).then(res => res.data.data);
+    return axiosClient.post<OrderResponse>(`/my-orders/${id}/cancel`).then((res) => res.data);
   },
 };

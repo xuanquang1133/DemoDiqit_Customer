@@ -5,7 +5,6 @@ import { productApi } from '@/api/product/index';
 import Banner from '@/components/layouts/Banner';
 import ProductSkeleton from '@/components/common/ProductSkeleton';
 import ProductCard from '@/components/common/ProductCard';
-import { Product } from '@/types/product';
 
 export default function Home() {
   const { data, isLoading } = useQuery({
@@ -35,7 +34,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-8 py-8">
           <h2 className="text-xl font-bold mb-6">Sản phẩm nổi bật</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((product: Product) => (
+            {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

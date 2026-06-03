@@ -22,18 +22,18 @@ export const productApi = {
     keyword?: string;
     category_ids?: string[];
   }) {
-    return axiosClient.get<unknown, ProductListResponse>('/products', { params: { ...params, is_public: '1' } }).then(res => res.data.data);
+    return axiosClient.get<ProductListResponse>('/products', { params: { ...params, is_public: '1' } }).then((res) => res.data);
   },
 
   getProduct(id: string) {
-    return axiosClient.get<unknown, ProductListResponse['items'][0]>(`/products/${id}`).then(res => res.data.data);
+    return axiosClient.get<ProductListResponse['items'][0]>(`/products/${id}`).then((res) => res.data);
   },
 
   getProductBySlug(slug: string) {
-    return axiosClient.get<unknown, ProductListResponse['items'][0]>(`/products/slug/${slug}`).then(res => res.data.data);
+    return axiosClient.get<ProductListResponse['items'][0]>(`/products/slug/${slug}`).then((res) => res.data);
   },
 
   getFeaturedProducts() {
-    return axiosClient.get<unknown, ProductListResponse>('/products/featured').then(res => res.data.data);
+    return axiosClient.get<ProductListResponse>('/products/featured').then((res) => res.data);
   },
 };

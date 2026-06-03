@@ -50,18 +50,18 @@ export interface ApiErrorResponse {
 
 export const authApi = {
   login(data: LoginRequest): Promise<LoginResponse> {
-    return axiosClient.post<unknown, ApiSuccessResponse<LoginResponse>>('/auth/login', data).then(res => res.data.data);
+    return axiosClient.post<LoginResponse>('/auth/login', data).then((res) => res.data);
   },
 
   register(data: RegisterRequest) {
-    return axiosClient.post<unknown, ApiSuccessResponse<{ id: number; username: string; email: string; full_name: string }>>('/auth/register', data).then(res => res.data.data);
+    return axiosClient.post<{ id: number; username: string; email: string; full_name: string }>('/auth/register', data).then((res) => res.data);
   },
 
   getUserInfo(): Promise<UserInfo> {
-    return axiosClient.get<unknown, ApiSuccessResponse<UserInfo>>('/user-info-by-token').then(res => res.data.data);
+    return axiosClient.get<UserInfo>('/user-info-by-token').then((res) => res.data);
   },
 
   changePassword(data: ChangePasswordRequest) {
-    return axiosClient.put<unknown, ApiSuccessResponse<null>>('/auth/change-password', data).then(res => res.data.data);
+    return axiosClient.put<null>('/auth/change-password', data).then((res) => res.data);
   },
 };
