@@ -12,7 +12,9 @@ export default function HeaderWrapper({ children }: { children: React.ReactNode 
   return (
     <FlyToCartProvider>
       {isProductDetail ? <ProductDetailHeader /> : <Header />}
-      {children}
+      <main style={{ paddingTop: '72px' }}>
+        {children}
+      </main>
     </FlyToCartProvider>
   );
 }
