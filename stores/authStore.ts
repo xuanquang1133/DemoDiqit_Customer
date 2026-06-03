@@ -51,7 +51,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true });
         try {
           const response = await authApi.getUserInfo();
-          set({ user: response.data, isLoading: false });
+          set({ user: response, isLoading: false });
 
           const serverCart = await cartApi.getCart();
           const serverItems = serverCart.cart_items;

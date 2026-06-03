@@ -10,6 +10,9 @@ export interface ProductListResponse {
     slug?: string;
   }>;
   total_pages: number;
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export const productApi = {
@@ -19,18 +22,18 @@ export const productApi = {
     keyword?: string;
     category_ids?: string[];
   }) {
-    return axiosClient.get<unknown, ProductListResponse>('/products', { params: { ...params, is_public: '1' } });
+    return axiosClient.get<unknown, ProductListResponse>('/products', { params: { ...params, is_public: '1' } }).then(res => res.data.data);
   },
 
   getProduct(id: string) {
-    return axiosClient.get<unknown, ProductListResponse['items'][0]>(`/products/${id}`);
+    return axiosClient.get<unknown, ProductListResponse['items'][0]>(`/products/${id}`).then(res => res.data.data);
   },
 
   getProductBySlug(slug: string) {
-    return axiosClient.get<unknown, ProductListResponse['items'][0]>(`/products/slug/${slug}`);
+    return axiosClient.get<unknown, ProductListResponse['items'][0]>(`/products/slug/${slug}`).then(res => res.data.data);
   },
 
   getFeaturedProducts() {
-    return axiosClient.get<unknown, ProductListResponse>('/products/featured');
+    return axiosClient.get<unknown, ProductListResponse>('/products/featured').then(res => res.data.data);
   },
 };

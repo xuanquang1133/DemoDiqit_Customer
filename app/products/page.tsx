@@ -35,8 +35,8 @@ export default function ProductsPage() {
     refetchOnWindowFocus: true,
   });
 
-  const categories = Array.isArray(categoriesData?.data)
-    ? categoriesData.data as Array<{ id: number; name: string; code: string }>
+  const categories = Array.isArray(categoriesData)
+    ? categoriesData as Array<{ id: number; name: string; code: string }>
     : [];
 
   const { data, isLoading, error } = useQuery({

@@ -12,6 +12,6 @@ export const categoryApi = {
   getCategories(isActive?: boolean) {
     return axiosClient.get<unknown, CategoryListResponse>('/categories/list-common', {
       params: isActive !== undefined ? { is_active: isActive } : {},
-    });
+    }).then(res => res.data.data);
   },
 };

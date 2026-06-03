@@ -49,19 +49,19 @@ export interface ApiErrorResponse {
 }
 
 export const authApi = {
-  login(data: LoginRequest) {
-    return axiosClient.post<unknown, ApiSuccessResponse<LoginResponse>>('/auth/login', data);
+  login(data: LoginRequest): Promise<LoginResponse> {
+    return axiosClient.post<unknown, ApiSuccessResponse<LoginResponse>>('/auth/login', data).then(res => res.data.data);
   },
 
   register(data: RegisterRequest) {
-    return axiosClient.post<unknown, ApiSuccessResponse<{ id: number; username: string; email: string; full_name: string }>>('/auth/register', data);
+    return axiosClient.post<unknown, ApiSuccessResponse<{ id: number; username: string; email: string; full_name: string }>>('/auth/register', data).then(res => res.data.data);
   },
 
-  getUserInfo() {
-    return axiosClient.get<unknown, ApiSuccessResponse<UserInfo>>('/user-info-by-token');
+  getUserInfo(): Promise<UserInfo> {
+    return axiosClient.get<unknown, ApiSuccessResponse<UserInfo>>('/user-info-by-token').then(res => res.data.data);
   },
 
   changePassword(data: ChangePasswordRequest) {
-    return axiosClient.put<unknown, ApiSuccessResponse<null>>('/auth/change-password', data);
+    return axiosClient.put<unknown, ApiSuccessResponse<null>>('/auth/change-password', data).then(res => res.data.data);
   },
 };
