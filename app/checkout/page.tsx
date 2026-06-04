@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
 import { orderApi } from '@/api/order/index';
-import CheckoutSummary from '@/components/checkout/CheckoutSummary';
 import toast from 'react-hot-toast';
 
 interface FormData {
@@ -25,7 +27,10 @@ interface FormErrors {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, shipping, clearCart } = useCartStore();
+  const subtotal = useCartStore((s) => s.subtotal);
+  const shipping = useCartStore((s) => s.shipping);
+  const total = useCartStore((s) => s.total);
+  const { items, clearCart } = useCartStore();
   const { token, user, _hasHydrated } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -94,14 +99,12 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     try {
-      const shippingFee = shipping();
-
       const orderData = await orderApi.createOrder({
         customer_name: formData.customer_name.trim(),
         customer_email: formData.customer_email.trim(),
         customer_phone: formData.customer_phone.trim().replace(/\s+/g, ''),
         shipping_address: formData.shipping_address.trim(),
-        shipping_fee: shippingFee,
+        shipping_fee: shipping(),
         notes: formData.notes.trim(),
         items: items.map((item) => ({
           product_id: item.id,
@@ -123,50 +126,71 @@ export default function CheckoutPage() {
     }
   };
 
+  const formattedTotal = new Intl.NumberFormat('vi-VN').format(subtotal());
+  const shippingFee = shipping();
+  const grandTotal = total();
+  const formattedGrandTotal = new Intl.NumberFormat('vi-VN').format(grandTotal);
+  const formattedShippingFee = new Intl.NumberFormat('vi-VN').format(shippingFee);
+
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <main className="pt-[80px] max-w-7xl mx-auto px-8 py-16 text-center">
-          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+      <div className="min-h-screen bg-white pt-16 md:pt-20 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center max-w-md mx-auto px-4"
+        >
+          <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-16 h-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">Giỏ hàng trống</h3>
-          <p className="text-gray-400 mb-6">Hãy thêm sản phẩm vào giỏ hàng của bạn</p>
-          <button
-            onClick={() => router.push('/products')}
-            className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors font-medium"
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Giỏ hàng trống</h2>
+          <p className="text-gray-500 mb-8">Hãy thêm sản phẩm vào giỏ hàng của bạn để tiếp tục thanh toán.</p>
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-colors"
           >
-            Tiếp tục mua sắm
-          </button>
-        </main>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+            Khám phá sản phẩm
+          </Link>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="pt-[80px] max-w-7xl mx-auto px-8 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Thanh toán</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Vui lòng điền thông tin giao hàng để hoàn tất đơn hàng
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-50 pt-16 md:pt-20">
+      <div className="container-custom py-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Thanh toán</h1>
+          <p className="text-gray-500 mt-2">Vui lòng điền thông tin giao hàng để hoàn tất đơn hàng</p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Left: Shipping Form */}
-          <div className="lg:col-span-2 space-y-5">
-            <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
-              <div className="bg-black text-white px-6 py-4">
-                <h2 className="font-semibold text-sm">Thông tin giao hàng</h2>
+          <div className="lg:col-span-2 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-2xl border border-gray-100 overflow-hidden"
+            >
+              <div className="bg-gradient-to-r from-black to-gray-800 px-6 py-4">
+                <h2 className="font-semibold text-sm text-white">Thông tin giao hàng</h2>
               </div>
 
-              <div className="p-6 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-6 space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Họ tên <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -175,19 +199,19 @@ export default function CheckoutPage() {
                       value={formData.customer_name}
                       onChange={handleInputChange}
                       placeholder="Nhập họ tên của bạn"
-                      className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-colors ${
+                      className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
                         errors.customer_name
-                          ? 'border-red-400 focus:ring-red-200 bg-red-50'
-                          : 'border-gray-200 focus:ring-orange-200 focus:border-orange-400'
+                          ? 'border-red-300 bg-red-50 focus:border-red-400'
+                          : 'border-gray-100 focus:border-red-400 focus:bg-white'
                       }`}
                     />
                     {errors.customer_name && (
-                      <p className="text-red-500 text-xs mt-1">{errors.customer_name}</p>
+                      <p className="text-red-500 text-xs mt-1.5">{errors.customer_name}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -196,43 +220,41 @@ export default function CheckoutPage() {
                       value={formData.customer_email}
                       onChange={handleInputChange}
                       placeholder="email@example.com"
-                      className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-colors ${
+                      className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
                         errors.customer_email
-                          ? 'border-red-400 focus:ring-red-200 bg-red-50'
-                          : 'border-gray-200 focus:ring-orange-200 focus:border-orange-400'
+                          ? 'border-red-300 bg-red-50 focus:border-red-400'
+                          : 'border-gray-100 focus:border-red-400 focus:bg-white'
                       }`}
                     />
                     {errors.customer_email && (
-                      <p className="text-red-500 text-xs mt-1">{errors.customer_email}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Số điện thoại <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      name="customer_phone"
-                      value={formData.customer_phone}
-                      onChange={handleInputChange}
-                      placeholder="0xxxxxxxxx"
-                      className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-colors ${
-                        errors.customer_phone
-                          ? 'border-red-400 focus:ring-red-200 bg-red-50'
-                          : 'border-gray-200 focus:ring-orange-200 focus:border-orange-400'
-                      }`}
-                    />
-                    {errors.customer_phone && (
-                      <p className="text-red-500 text-xs mt-1">{errors.customer_phone}</p>
+                      <p className="text-red-500 text-xs mt-1.5">{errors.customer_email}</p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Số điện thoại <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="customer_phone"
+                    value={formData.customer_phone}
+                    onChange={handleInputChange}
+                    placeholder="0xxxxxxxxx"
+                    className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                      errors.customer_phone
+                        ? 'border-red-300 bg-red-50 focus:border-red-400'
+                        : 'border-gray-100 focus:border-red-400 focus:bg-white'
+                    }`}
+                  />
+                  {errors.customer_phone && (
+                    <p className="text-red-500 text-xs mt-1.5">{errors.customer_phone}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Địa chỉ giao hàng <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -241,19 +263,19 @@ export default function CheckoutPage() {
                     value={formData.shipping_address}
                     onChange={handleInputChange}
                     placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
-                    className={`w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-colors ${
+                    className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
                       errors.shipping_address
-                        ? 'border-red-400 focus:ring-red-200 bg-red-50'
-                        : 'border-gray-200 focus:ring-orange-200 focus:border-orange-400'
+                        ? 'border-red-300 bg-red-50 focus:border-red-400'
+                        : 'border-gray-100 focus:border-red-400 focus:bg-white'
                     }`}
                   />
                   {errors.shipping_address && (
-                    <p className="text-red-500 text-xs mt-1">{errors.shipping_address}</p>
+                    <p className="text-red-500 text-xs mt-1.5">{errors.shipping_address}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Ghi chú (tùy chọn)
                   </label>
                   <textarea
@@ -262,59 +284,143 @@ export default function CheckoutPage() {
                     onChange={handleInputChange}
                     placeholder="Ghi chú cho đơn hàng (ví dụ: giao giờ hành chính, gọi trước khi giao...)"
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 transition-colors resize-none"
+                    className="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all resize-none"
                   />
                 </div>
               </div>
-            </div>
-
-            {/* Order Summary Mobile */}
-            <div className="lg:hidden">
-              <CheckoutSummary />
-            </div>
+            </motion.div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4">
-              <button
-                onClick={() => router.push('/cart')}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition-colors font-medium text-sm flex items-center gap-2"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Link
+                href="/cart"
+                className="px-6 py-4 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium text-sm flex items-center justify-center gap-2"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                 </svg>
                 Quay lại giỏ hàng
-              </button>
-              <button
+              </Link>
+              <motion.button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="flex-1 bg-red-500 text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-red-600 transition-colors shadow-md disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 bg-red-600 text-white py-4 rounded-xl font-semibold text-sm hover:bg-red-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>
-                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
                     Đang xử lý...
                   </>
                 ) : (
                   <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    Đặt hàng
+                    Đặt hàng ngay
                   </>
                 )}
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           </div>
 
-          {/* Right: Order Summary Desktop */}
-          <div className="hidden lg:block">
-            <CheckoutSummary />
+          {/* Right: Order Summary */}
+          <div className="lg:col-span-1">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-24"
+            >
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Tóm tắt đơn hàng</h2>
+
+              {/* Order Items */}
+              <div className="space-y-4 max-h-[300px] overflow-y-auto mb-6">
+                {items.map((item) => (
+                  <div key={item.id} className="flex gap-4">
+                    <div className="relative w-16 h-16 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0">
+                      {item.thumbnail ? (
+                        <Image
+                          src={item.thumbnail}
+                          alt={item.name}
+                          fill
+                          className="object-cover"
+                          sizes="64px"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-gray-300">
+                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 text-white text-xs rounded-full flex items-center justify-center">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 line-clamp-2">{item.name}</p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {new Intl.NumberFormat('vi-VN').format(item.price * item.quantity)}đ
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Summary */}
+              <div className="space-y-3 pt-4 border-t border-gray-100">
+                <div className="flex justify-between text-gray-600">
+                  <span>Tạm tính</span>
+                  <span className="font-medium text-gray-900">{formattedTotal}đ</span>
+                </div>
+                <div className="flex justify-between text-gray-600">
+                  <span>Phí vận chuyển</span>
+                  <span className="font-medium text-gray-900">
+                    {shippingFee === 0 ? (
+                      <span className="text-green-600">Miễn phí</span>
+                    ) : (
+                      `${formattedShippingFee}đ`
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-4 mt-4 border-t border-gray-100">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold text-gray-900">Tổng cộng</span>
+                  <span className="text-2xl font-bold text-red-600">{formattedGrandTotal}đ</span>
+                </div>
+              </div>
+
+              {/* Trust Badges */}
+              <div className="mt-6 pt-6 border-t border-gray-100 space-y-3">
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                  <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                  Thanh toán an toàn 100%
+                </div>
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                  <svg className="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  Hỗ trợ 24/7
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

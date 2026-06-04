@@ -12,29 +12,37 @@ export default function CheckoutSummary() {
   const discountAmount = Math.round(subtotal() * discount / 100);
 
   return (
-    <div className="bg-white rounded-2xl border shadow-sm overflow-hidden sticky top-[80px]">
-      <div className="bg-black text-white px-6 py-4">
-        <h2 className="font-semibold text-sm">Thông tin đơn hàng</h2>
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden sticky top-24">
+      <div className="bg-gradient-to-r from-black to-gray-800 px-6 py-4">
+        <h2 className="font-semibold text-sm text-white">Thông tin đơn hàng</h2>
       </div>
 
       <div className="p-5 space-y-4">
         <div className="space-y-3 max-h-[300px] overflow-y-auto">
           {items.map((item) => (
-            <div key={item.id} className="flex gap-3 items-start">
-              <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                <Image
-                  src={item.thumbnail}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                  sizes="56px"
-                />
+            <div key={item.id} className="flex gap-3 items-start p-3 bg-gray-50 rounded-xl">
+              <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-white flex-shrink-0">
+                {item.thumbnail ? (
+                  <Image
+                    src={item.thumbnail}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                    sizes="56px"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-300">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-medium text-gray-800 line-clamp-2">
                   {item.name}
                 </h4>
-                <div className="flex items-center justify-between mt-1">
+                <div className="flex items-center justify-between mt-2">
                   <span className="text-xs text-gray-400">
                     x{item.quantity}
                   </span>
@@ -47,14 +55,20 @@ export default function CheckoutSummary() {
           ))}
         </div>
 
-        <div className="border-t border-dashed pt-4 space-y-2">
+        <div className="border-t border-gray-100 pt-4 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Tạm tính</span>
             <span className="font-medium text-gray-700">{formatPrice(subtotal())}đ</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Phí vận chuyển</span>
-            <span className="font-medium text-gray-700">{formatPrice(shipping())}đ</span>
+            <span className="font-medium text-gray-700">
+              {shipping() === 0 ? (
+                <span className="text-green-600">Miễn phí</span>
+              ) : (
+                `${formatPrice(shipping())}đ`
+              )}
+            </span>
           </div>
           {couponCode && (
             <div className="flex justify-between text-sm">
@@ -62,7 +76,7 @@ export default function CheckoutSummary() {
               <span className="font-medium text-green-600">-{formatPrice(discountAmount)}đ</span>
             </div>
           )}
-          <div className="border-t border-dashed pt-3 flex justify-between">
+          <div className="border-t border-gray-100 pt-3 flex justify-between">
             <span className="font-semibold text-gray-800">Tổng cộng</span>
             <span className="font-bold text-red-600 text-lg">{formatPrice(total())}đ</span>
           </div>

@@ -3,27 +3,30 @@
 import { useState, useEffect, useRef } from 'react';
 
 export function useScrollDirection(threshold = 10) {
-  const [isVisible, setIsVisible] = useState(true);
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const lastScrollY = useRef(0);
+  const hasScrolledRef = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY <= 0) {
-        setIsVisible(true);
+        hasScrolledRef.current = false;
         lastScrollY.current = 0;
         return;
       }
+
+      hasScrolledRef.current = true;
 
       if (Math.abs(currentScrollY - lastScrollY.current) < threshold) {
         return;
       }
 
       if (currentScrollY > lastScrollY.current) {
-        setIsVisible(false);
+        setScrollDirection('down');
       } else {
-        setIsVisible(true);
+        setScrollDirection('up');
       }
 
       lastScrollY.current = currentScrollY;
@@ -33,5 +36,5 @@ export function useScrollDirection(threshold = 10) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [threshold]);
 
-  return isVisible;
+  return scrollDirection;
 }
