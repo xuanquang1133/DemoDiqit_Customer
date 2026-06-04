@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { orderApi } from '@/api/order/index';
@@ -221,16 +222,16 @@ function OrderConfirmationView({ orderId }: { orderId: number }) {
 
         {/* Action Buttons */}
         <div className="flex gap-4">
-          <a
-            href="/orders"
+          <Link
+            href={`/orders/${orderId}`}
             className="flex-1 bg-black text-white py-4 rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors shadow-lg flex items-center justify-center gap-2"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             Theo dõi đơn hàng
-          </a>
-          <a
+          </Link>
+          <Link
             href="/products"
             className="flex-1 py-4 rounded-xl font-semibold text-sm border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
           >
@@ -238,7 +239,7 @@ function OrderConfirmationView({ orderId }: { orderId: number }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             Tiếp tục mua sắm
-          </a>
+          </Link>
         </div>
       </main>
     </div>
