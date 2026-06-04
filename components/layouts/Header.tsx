@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect, useSyncExternalStore } from 'react';
-import { flushSync } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import SearchIcon from '@/components/icons/CustomerSearchIcon';
@@ -36,15 +35,11 @@ export default function Header() {
   const { cartButtonRef } = useFlyToCart();
   const scrollDirection = useScrollDirection(10);
   const { user, token, logout, fetchUser } = useAuthStore();
-  const [hasScrolled, setHasScrolled] = useState(false);
   const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [shouldAutoHide, setShouldAutoHide] = useState(false);
 
-  useEffect(() => {
-    if (scrollDirection !== null) {
-      flushSync(() => setHasScrolled(true));
-    }
-  }, [scrollDirection]);
+  // hasScrolled is true when user has scrolled at least once
+  const hasScrolled = scrollDirection !== null;
 
   // Auto-hide after 3 seconds of inactivity
   useEffect(() => {
@@ -52,10 +47,11 @@ export default function Header() {
 
     if (shouldShow && !isHoveringHeader) {
       hideTimerRef.current = setTimeout(() => {
-        flushSync(() => setShouldAutoHide(true));
+        setShouldAutoHide(true);
       }, 3000);
     } else {
-      flushSync(() => setShouldAutoHide(false));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setShouldAutoHide(false);
       if (hideTimerRef.current) {
         clearTimeout(hideTimerRef.current);
         hideTimerRef.current = null;
