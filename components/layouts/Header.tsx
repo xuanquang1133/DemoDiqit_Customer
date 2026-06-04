@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useSyncExternalStore } from 'react';
 import SearchIcon from '@/components/icons/CustomerSearchIcon';
 import InternshopLogo from '@/components/common/InternshopLogo';
 import { useCartStore } from '@/stores/cartStore';
@@ -13,12 +13,18 @@ import { useScrollDirection } from '@/hooks/useScrollDirection';
 import { useAuthStore } from '@/stores/authStore';
 import toast from 'react-hot-toast';
 
+const subscribeMounted = (onStoreChange: () => void) => {
+  onStoreChange();
+  return () => {};
+};
+const getSnapshotMounted = () => true;
+const getServerSnapshotMounted = () => false;
+
 export default function Header() {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(subscribeMounted, getSnapshotMounted, getServerSnapshotMounted);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const itemCount = useCartStore((state) => state.itemCount());
   const { cartButtonRef } = useFlyToCart();

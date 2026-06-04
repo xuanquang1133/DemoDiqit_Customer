@@ -37,23 +37,12 @@ export default function CheckoutPage() {
   }, [_hasHydrated, token, router]);
 
   const [formData, setFormData] = useState<FormData>({
-    customer_name: '',
-    customer_email: '',
+    customer_name: user?.full_name ?? '',
+    customer_email: user?.email ?? '',
     customer_phone: '',
     shipping_address: '',
     notes: '',
   });
-
-  useEffect(() => {
-    if (!_hasHydrated || !user) return;
-    setFormData((prev) => ({
-      customer_name: prev.customer_name || user.full_name || '',
-      customer_email: prev.customer_email || user.email || '',
-      customer_phone: prev.customer_phone || '',
-      shipping_address: prev.shipping_address || '',
-      notes: prev.notes || '',
-    }));
-  }, [_hasHydrated, user]);
 
   const [errors, setErrors] = useState<FormErrors>({});
 
