@@ -1,13 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import ChevronLeftIcon from '@/components/icons/CustomerChevronLeftIcon';
-import InternshopLogo from '@/components/common/InternshopLogo';
 import { useCartStore } from '@/stores/cartStore';
-import CartIcon from '@/components/icons/CartIcon';
-import FlyingImageLayer from '@/components/cart/FlyingImageLayer';
 import { useFlyToCart } from '@/contexts/FlyToCartContext';
 import { useScrollDirection } from '@/hooks/useScrollDirection';
+import { motion } from 'framer-motion';
 
 export default function ProductDetailHeader() {
   const router = useRouter();
@@ -16,55 +13,59 @@ export default function ProductDetailHeader() {
   const isVisible = useScrollDirection(10);
 
   return (
-    <>
-      <FlyingImageLayer />
-      <header
-        className="bg-white border-b shadow-sm z-40 transition-transform duration-300 ease-in-out"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+    <motion.header
+      className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100"
+      initial={{ y: 0 }}
+      animate={{ y: isVisible ? 0 : -100 }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
+      <div className="container-custom">
+        <div className="flex items-center justify-between h-16">
+          {/* Left: Back Button & Logo */}
+          <div className="flex items-center gap-3">
             <button
               onClick={() => router.back()}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <ChevronLeftIcon className="h-5 w-5" />
+              <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
             </button>
-            <InternshopLogo size="md" />
-          </div>
-          <div className="flex items-center gap-6 text-sm">
-            <button
-              ref={cartButtonRef}
-              onClick={() => router.push('/cart')}
-              className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <CartIcon className="h-5 w-5" />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full animate-bounce-in">
-                  {itemCount}
-                </span>
-              )}
+            <button onClick={() => router.push('/')} className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+              </div>
+              <span className="text-lg font-bold text-black hidden sm:block">
+                Intern<span className="text-red-600">Shop</span>
+              </span>
             </button>
           </div>
+
+          {/* Right: Cart Button */}
+          <button
+            ref={cartButtonRef}
+            onClick={() => router.push('/cart')}
+            className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label={`Giỏ hàng (${itemCount} sản phẩm)`}
+          >
+            <svg className="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+            {itemCount > 0 && (
+              <motion.span
+                key={itemCount}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full"
+              >
+                {itemCount > 99 ? '99+' : itemCount}
+              </motion.span>
+            )}
+          </button>
         </div>
-      </header>
-      <style jsx global>{`
-        @keyframes bounce-in {
-          0% { transform: scale(0.3); opacity: 0; }
-          50% { transform: scale(1.2); }
-          70% { transform: scale(0.9); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-bounce-in {
-          animation: bounce-in 0.4s ease-out;
-        }
-      `}</style>
-    </>
+      </div>
+    </motion.header>
   );
 }

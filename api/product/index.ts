@@ -12,14 +12,33 @@ export interface ProductListResponse {
   total_pages: number;
 }
 
+export type SortOption = 'newest' | 'price_asc' | 'price_desc' | 'name_asc' | 'name_desc';
+
 export const productApi = {
   getProducts(params?: {
     page?: number;
     limit?: number;
     keyword?: string;
     category_ids?: string[];
+    price_min?: number;
+    price_max?: number;
+    sort?: SortOption;
   }) {
-    return axiosClient.get<unknown, ProductListResponse>('/products', { params: { ...params, is_public: '1' } });
+    const query: Record<string, string | number | boolean> = { is_public: true };
+
+    if (params?.page) query.page = params.page;
+    if (params?.limit) query.limit = params.limit;
+    if (params?.keyword) query.keyword = params.keyword;
+    if (params?.category_ids?.length) query.category_ids = params.category_ids.join(',');
+    if (params?.price_min !== undefined && params.price_min !== null && params.price_min !== '') {
+      query.price_min = params.price_min;
+    }
+    if (params?.price_max !== undefined && params.price_max !== null && params.price_max !== '') {
+      query.price_max = params.price_max;
+    }
+    if (params?.sort) query.sort = params.sort;
+
+    return axiosClient.get<unknown, ProductListResponse>('/products', { params: query });
   },
 
   getProduct(id: string) {

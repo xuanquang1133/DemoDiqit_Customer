@@ -34,11 +34,12 @@ interface CartStore {
 const SHIPPING_FEE = 30000;
 
 function syncToServer(items: LocalCartItem[]) {
+  const token = localStorage.getItem('access_token');
+  if (!token) return;
   if (items.length === 0) {
-    console.log('[CART SYNC] Cart empty, skipping sync');
+    cartApi.saveCart([]).catch(() => {});
     return;
   }
-  console.log('[CART SYNC] Syncing to server:', JSON.stringify(items));
   cartApi
     .saveCart(
       items.map((i) => ({
@@ -50,8 +51,7 @@ function syncToServer(items: LocalCartItem[]) {
         description: i.description,
       }))
     )
-    .then((res) => console.log('[CART SYNC] Save success:', JSON.stringify(res)))
-    .catch((err) => console.error('[CART SYNC] Save failed:', err));
+    .catch(() => {});
 }
 
 export const useCartStore = create<CartStore>()(
@@ -124,7 +124,6 @@ export const useCartStore = create<CartStore>()(
       },
 
       loadFromServer: (serverItems) => {
-        console.log('[LOAD FROM SERVER] Loading', serverItems.length, 'items:', JSON.stringify(serverItems));
         set({
           items: serverItems.map((i) => ({
             id: i.product_id,
@@ -136,7 +135,6 @@ export const useCartStore = create<CartStore>()(
           })),
           _serverLoaded: true,
         });
-        console.log('[LOAD FROM SERVER] Done. State items:', useCartStore.getState().items.length);
       },
     }),
     {

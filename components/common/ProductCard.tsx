@@ -3,11 +3,8 @@
 import Image from 'next/image';
 import { forwardRef, useImperativeHandle, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import EyeIcon from '@/components/icons/CustomerEyeIcon';
-import CartIcon from '@/components/icons/CartIcon';
-import PaperPlaneIcon from '@/components/icons/CustomerPaperPlaneIcon';
+import { motion } from 'framer-motion';
 import { useCartStore } from '@/stores/cartStore';
-import { useAuthStore } from '@/stores/authStore';
 import { useFlyToCart } from '@/contexts/FlyToCartContext';
 import toast from 'react-hot-toast';
 
@@ -21,6 +18,7 @@ interface ProductCardProps {
     category?: { id?: number; name?: string };
     description?: string;
   };
+  index?: number;
 }
 
 export interface ProductCardHandle {
@@ -28,10 +26,9 @@ export interface ProductCardHandle {
 }
 
 const ProductCard = forwardRef<ProductCardHandle, ProductCardProps>(
-  ({ product }, ref) => {
+  ({ product, index = 0 }, ref) => {
     const router = useRouter();
     const addItem = useCartStore((s) => s.addItem);
-    const token = useAuthStore((s) => s.token);
     const { triggerFly, cartButtonRef } = useFlyToCart();
     const imageContainerRef = useRef<HTMLDivElement>(null);
     const formattedPrice = new Intl.NumberFormat('vi-VN').format(product.price);
@@ -51,12 +48,6 @@ const ProductCard = forwardRef<ProductCardHandle, ProductCardProps>(
     };
 
     const handleBuyNow = useCallback(() => {
-      if (!token) {
-        toast.error('Vui lòng đăng nhập để mua hàng');
-        router.push('/login?redirect=/checkout');
-        return;
-      }
-
       const { items } = useCartStore.getState();
       const alreadyInCart = items.some((i) => i.id === product.id);
 
@@ -71,9 +62,11 @@ const ProductCard = forwardRef<ProductCardHandle, ProductCardProps>(
       }
 
       router.push('/checkout');
-    }, [product, addItem, router, token]);
+    }, [product, addItem, router]);
 
-    const handleAddToCart = useCallback(() => {
+    const handleAddToCart = useCallback((e: React.MouseEvent) => {
+      e.stopPropagation();
+
       if (imageContainerRef.current && cartButtonRef.current) {
         const startRect = imageContainerRef.current.getBoundingClientRect();
         const endRect = cartButtonRef.current.getBoundingClientRect();
@@ -90,61 +83,88 @@ const ProductCard = forwardRef<ProductCardHandle, ProductCardProps>(
 
       toast.success(`Đã thêm "${product.name}" vào giỏ hàng`, {
         duration: 2000,
-        style: { background: '#16a34a', color: '#fff', fontSize: '14px' },
+        className: 'toast-success',
       });
     }, [product, addItem, triggerFly, cartButtonRef]);
 
     return (
-      <div className="rounded-lg border overflow-hidden hover:shadow-lg transition-shadow">
-        <div
-          ref={imageContainerRef}
-          className="relative h-48 bg-gray-100 cursor-pointer"
-          onClick={handleViewDetail}
-        >
-          {product.thumbnail ? (
-            <Image
-              src={product.thumbnail}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full text-gray-400">
-              No Image
-            </div>
-          )}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: index * 0.05, ease: 'easeOut' }}
+        className="group cursor-pointer"
+        onClick={handleViewDetail}
+      >
+        <div className="relative bg-white rounded-2xl overflow-hidden border border-gray-100 transition-all duration-500 hover:shadow-2xl hover:border-gray-200 hover:-translate-y-1">
+          {/* Image Container */}
           <div
-            className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
-            onClick={handleViewDetail}
+            ref={imageContainerRef}
+            className="relative aspect-[4/5] overflow-hidden bg-gray-50"
           >
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-              <EyeIcon className="h-6 w-6 text-gray-700" />
+            {product.thumbnail ? (
+              <Image
+                src={product.thumbnail}
+                alt={product.name}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            )}
+
+            {/* Overlay on hover */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            {/* Quick actions on hover */}
+            <div className="absolute bottom-4 left-4 right-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+              <button
+                onClick={handleAddToCart}
+                className="w-full py-3 bg-white text-black font-semibold rounded-xl hover:bg-red-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+                Thêm vào giỏ
+              </button>
+            </div>
+
+            {/* Category badge */}
+            {product.category?.name && (
+              <div className="absolute top-4 left-4">
+                <span className="px-3 py-1.5 bg-white/90 backdrop-blur-sm text-xs font-semibold text-gray-700 rounded-full">
+                  {product.category.name}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Content */}
+          <div className="p-5">
+            <h3 className="font-semibold text-gray-900 line-clamp-2 group-hover:text-red-600 transition-colors duration-300 text-sm md:text-base leading-snug mb-3 min-h-[2.5rem]">
+              {product.name}
+            </h3>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div className="flex flex-col">
+                <span className="text-base md:text-xl font-bold text-red-600 whitespace-nowrap">
+                  {formattedPrice}
+                  <span className="text-xs md:text-sm font-medium ml-0.5">đ</span>
+                </span>
+              </div>
+              <button
+                onClick={handleBuyNow}
+                className="px-4 py-2 bg-black text-white text-xs md:text-sm font-medium rounded-full hover:bg-red-600 transition-colors duration-300 opacity-0 group-hover:opacity-100 w-fit md:ml-auto"
+              >
+                Mua ngay
+              </button>
             </div>
           </div>
         </div>
-        <div className="p-4">
-          <p className="text-xs text-gray-500">{product.category?.name}</p>
-          <h3 className="font-medium text-sm line-clamp-2 mt-1">{product.name}</h3>
-          <p className="text-red-600 font-semibold mt-2">{formattedPrice}đ</p>
-          <div className="flex justify-center gap-3 mt-4">
-            <button
-              onClick={handleBuyNow}
-              className="w-28 h-10 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm flex items-center justify-center gap-2"
-              title="Mua ngay"
-            >
-              <PaperPlaneIcon className="h-5 w-5" />
-            </button>
-            <button
-              onClick={handleAddToCart}
-              className="w-28 h-10 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm flex items-center justify-center gap-2"
-              title="Thêm vào giỏ hàng"
-            >
-              <CartIcon className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      </div>
+      </motion.div>
     );
   }
 );
