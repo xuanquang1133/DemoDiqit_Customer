@@ -53,15 +53,15 @@ export interface PaginatedOrders {
 
 export const orderApi = {
   createOrder(data: CreateOrderRequest) {
-    return axiosClient.post<{ message: string; data: OrderResponse }>('/orders', data).then(res => res.data);
+    return axiosClient.post<OrderResponse>('/orders', data).then(res => res.data);
   },
 
   getMyOrders(page = 1, limit = 10) {
-    return axiosClient.get<{ message: string; data: PaginatedOrders }>(`/my-orders?page=${page}&limit=${limit}`).then(res => res.data);
+    return axiosClient.get<PaginatedOrders>(`/my-orders?page=${page}&limit=${limit}`).then(res => res.data);
   },
 
   getMyOrderDetail(id: number) {
-    return axiosClient.get<{ message: string; data: OrderResponse }>(`/my-orders/${id}`).then(res => res.data);
+    return axiosClient.get<OrderResponse>(`/my-orders/${id}`).then(res => res.data);
   },
 
   cancelMyOrder(id: number) {

@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { orderApi } from '@/api/order/index';
 
 interface OrderItem {
   id: number;
@@ -38,25 +40,11 @@ const statusLabels: Record<string, string> = {
   cancelled: 'Đã hủy',
 };
 
-export default function OrderConfirmationContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  searchParams.get('id'); // kept for URL params if needed
-  const orderNumberParam = searchParams.get('orderNumber');
-
-  const [order] = useState<OrderData | null>(() => {
-    if (typeof window !== 'undefined') {
-      const stored = sessionStorage.getItem('lastOrder');
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch {
-          return null;
-        }
-      }
-    }
-    return null;
+function OrderConfirmationView({ orderId }: { orderId: number }) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['order-confirmation', orderId],
+    queryFn: () => orderApi.getMyOrderDetail(orderId),
+    enabled: !!orderId,
   });
 
   const formatPrice = (price: number) =>
@@ -76,17 +64,35 @@ export default function OrderConfirmationContent() {
     }
   };
 
-  const displayOrder = order || {
-    order_number: orderNumberParam || '—',
-    order_items: [] as OrderItem[],
-    created_at: new Date().toISOString(),
-    subtotal: 0,
-    shipping_fee: 0,
-    total_amount: 0,
-    status: 'pending',
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-[80px]">
+        <div className="text-center">
+          <div className="w-12 h-12 mx-auto mb-4 border-4 border-gray-200 border-t-orange-500 rounded-full animate-spin" />
+          <p className="text-gray-500 text-sm">Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const items = displayOrder.order_items || [];
+  if (isError || !data) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-[80px]">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Không tìm thấy đơn hàng</h3>
+          <p className="text-gray-400 mb-6">Vui lòng kiểm tra lại mã đơn hàng</p>
+        </div>
+      </div>
+    );
+  }
+
+  const order: OrderData = data;
+  const items = order.order_items || [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -109,34 +115,32 @@ export default function OrderConfirmationContent() {
           <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
             <h2 className="font-semibold text-sm">Thông tin đơn hàng</h2>
             <span className="text-xs bg-green-500 text-white px-3 py-1 rounded-full font-medium">
-              {statusLabels[displayOrder.status] || displayOrder.status}
+              {statusLabels[order.status] || order.status}
             </span>
           </div>
 
           <div className="p-6 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-500">Mã đơn hàng</span>
-              <span className="font-bold text-gray-800">{displayOrder.order_number}</span>
+              <span className="font-bold text-gray-800">{order.order_number}</span>
             </div>
-            {order?.created_at && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Ngày đặt</span>
-                <span className="font-medium text-gray-700">{formatDate(order.created_at)}</span>
-              </div>
-            )}
-            {order?.customer_name && (
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Ngày đặt</span>
+              <span className="font-medium text-gray-700">{formatDate(order.created_at)}</span>
+            </div>
+            {order.customer_name && (
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Người nhận</span>
                 <span className="font-medium text-gray-700">{order.customer_name}</span>
               </div>
             )}
-            {order?.customer_phone && (
+            {order.customer_phone && (
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Số điện thoại</span>
                 <span className="font-medium text-gray-700">{order.customer_phone}</span>
               </div>
             )}
-            {order?.shipping_address && (
+            {order.shipping_address && (
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Địa chỉ giao hàng</span>
                 <span className="font-medium text-gray-700 text-right max-w-[60%]">{order.shipping_address}</span>
@@ -200,16 +204,16 @@ export default function OrderConfirmationContent() {
             <div className="p-6 space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Tạm tính</span>
-                <span className="font-medium text-gray-700">{formatPrice(displayOrder.subtotal)}đ</span>
+                <span className="font-medium text-gray-700">{formatPrice(order.subtotal)}đ</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Phí vận chuyển</span>
-                <span className="font-medium text-gray-700">{formatPrice(displayOrder.shipping_fee)}đ</span>
+                <span className="font-medium text-gray-700">{formatPrice(order.shipping_fee)}đ</span>
               </div>
               <div className="border-t border-dashed pt-3 flex justify-between">
                 <span className="font-semibold text-gray-800">Tổng cộng</span>
                 <span className="font-bold text-red-600 text-lg">
-                  {formatPrice(displayOrder.total_amount)}đ
+                  {formatPrice(order.total_amount)}đ
                 </span>
               </div>
             </div>
@@ -218,26 +222,66 @@ export default function OrderConfirmationContent() {
 
         {/* Action Buttons */}
         <div className="flex gap-4">
-          <button
-            onClick={() => router.push('/')}
+          <Link
+            href={`/orders/${orderId}`}
             className="flex-1 bg-black text-white py-4 rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors shadow-lg flex items-center justify-center gap-2"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             Theo dõi đơn hàng
-          </button>
-          <button
-            onClick={() => router.push('/products')}
+          </Link>
+          <Link
+            href="/products"
             className="flex-1 py-4 rounded-xl font-semibold text-sm border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             Tiếp tục mua sắm
-          </button>
+          </Link>
         </div>
       </main>
     </div>
   );
+}
+
+export default function OrderConfirmationContent() {
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get('id');
+
+  if (!orderId) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-[80px]">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Không tìm thấy đơn hàng</h3>
+          <p className="text-gray-400 mb-6">Vui lòng kiểm tra lại mã đơn hàng</p>
+        </div>
+      </div>
+    );
+  }
+
+  const id = parseInt(orderId, 10);
+  if (isNaN(id)) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-[80px]">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">Mã đơn hàng không hợp lệ</h3>
+          <p className="text-gray-400 mb-6">Vui lòng kiểm tra lại đường link</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <OrderConfirmationView orderId={id} />;
 }

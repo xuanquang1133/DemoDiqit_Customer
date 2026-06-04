@@ -26,7 +26,7 @@ interface FormErrors {
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, shipping, clearCart } = useCartStore();
-  const { token, _hasHydrated } = useAuthStore();
+  const { token, user, _hasHydrated } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -37,8 +37,8 @@ export default function CheckoutPage() {
   }, [_hasHydrated, token, router]);
 
   const [formData, setFormData] = useState<FormData>({
-    customer_name: '',
-    customer_email: '',
+    customer_name: user?.full_name ?? '',
+    customer_email: user?.email ?? '',
     customer_phone: '',
     shipping_address: '',
     notes: '',
