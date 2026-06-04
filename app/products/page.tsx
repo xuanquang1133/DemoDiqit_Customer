@@ -2,7 +2,6 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-import { flushSync } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { productApi, SortOption } from '@/api/product/index';
@@ -74,11 +73,10 @@ export default function ProductsPage() {
     const newKeyword = searchParams.get('keyword') || '';
     const newCategory = searchParams.get('category') || '';
     const newPage = Number(searchParams.get('page') || '1');
-    flushSync(() => {
-      setSidebarKeyword(newKeyword);
-      setSidebarCategory(newCategory);
-      setPage(newPage);
-    });
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSidebarKeyword(newKeyword);
+    setSidebarCategory(newCategory);
+    setPage(newPage);
   }, [searchParams]);
 
   const { data: categoriesData } = useQuery({

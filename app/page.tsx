@@ -13,7 +13,7 @@ interface Product {
   name: string;
   price: number;
   thumbnail: string;
-  category?: { name: string };
+  category?: { id?: number; name?: string };
 }
 
 export default function Home() {
