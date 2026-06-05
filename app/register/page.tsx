@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { authApi } from '@/api/auth';
 import { useAuthStore } from '@/stores/authStore';
 import { useCartStore } from '@/stores/cartStore';
@@ -23,6 +24,7 @@ export default function RegisterPage() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,7 +78,6 @@ export default function RegisterPage() {
         full_name: formData.full_name.trim(),
       });
 
-      // Auto login after register
       const loginRes = await authApi.login({
         email: formData.email.trim(),
         password: formData.password,
@@ -106,25 +107,45 @@ export default function RegisterPage() {
     }
   };
 
-  const inputClass = (field: string) =>
-    `w-full px-4 py-3 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-colors ${
-      errors[field]
-        ? 'border-red-400 focus:ring-red-200 bg-red-50'
-        : 'border-gray-200 focus:ring-orange-200 focus:border-orange-400'
-    }`;
-
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
-          <div className="bg-black text-white px-8 py-5 text-center">
-            <h1 className="text-xl font-bold">Tạo tài khoản mới</h1>
-            <p className="text-gray-400 text-sm mt-1">Tham gia InternShop ngay hôm nay</p>
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <Link href="/" className="inline-flex items-center gap-2">
+            <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
+              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+            </div>
+            <span className="text-2xl font-bold text-black">
+              Intern<span className="text-red-600">Shop</span>
+            </span>
+          </Link>
+        </motion.div>
+
+        {/* Register Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden"
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-8 text-center">
+            <h1 className="text-2xl font-bold text-white">Tạo tài khoản mới</h1>
+            <p className="text-red-100 text-sm mt-2">Tham gia InternShop ngay hôm nay</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-8 space-y-4">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-8 space-y-5">
+            {/* Username */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Tài khoản <span className="text-red-500">*</span>
               </label>
               <input
@@ -133,13 +154,18 @@ export default function RegisterPage() {
                 value={formData.username}
                 onChange={handleChange}
                 placeholder="Nhập tài khoản"
-                className={inputClass('username')}
+                className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                  errors.username
+                    ? 'border-red-300 bg-red-50 focus:border-red-400'
+                    : 'border-gray-100 focus:border-red-400 focus:bg-white'
+                }`}
               />
-              {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
+              {errors.username && <p className="text-red-500 text-xs mt-1.5">{errors.username}</p>}
             </div>
 
+            {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Họ và tên
               </label>
               <input
@@ -148,12 +174,13 @@ export default function RegisterPage() {
                 value={formData.full_name}
                 onChange={handleChange}
                 placeholder="Nhập họ và tên (tùy chọn)"
-                className={inputClass('full_name').replace('focus:ring-orange-200 focus:border-orange-400', 'focus:ring-gray-200 focus:border-gray-400')}
+                className="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all"
               />
             </div>
 
+            {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -162,28 +189,56 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="email@example.com"
-                className={inputClass('email')}
+                className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                  errors.email
+                    ? 'border-red-300 bg-red-50 focus:border-red-400'
+                    : 'border-gray-100 focus:border-red-400 focus:bg-white'
+                }`}
               />
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+              {errors.email && <p className="text-red-500 text-xs mt-1.5">{errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Mật khẩu <span className="text-red-500">*</span>
               </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Nhập mật khẩu"
-                className={inputClass('password')}
-              />
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Nhập mật khẩu"
+                  className={`w-full px-4 py-3.5 pr-12 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                    errors.password
+                      ? 'border-red-300 bg-red-50 focus:border-red-400'
+                      : 'border-gray-100 focus:border-red-400 focus:bg-white'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? (
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                    </svg>
+                  ) : (
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+              {errors.password && <p className="text-red-500 text-xs mt-1.5">{errors.password}</p>}
             </div>
 
+            {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Nhập lại mật khẩu <span className="text-red-500">*</span>
               </label>
               <input
@@ -192,29 +247,70 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Nhập lại mật khẩu"
-                className={inputClass('confirmPassword')}
+                className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                  errors.confirmPassword
+                    ? 'border-red-300 bg-red-50 focus:border-red-400'
+                    : 'border-gray-100 focus:border-red-400 focus:bg-white'
+                }`}
               />
               {errors.confirmPassword && (
-                <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
+                <p className="text-red-500 text-xs mt-1.5">{errors.confirmPassword}</p>
               )}
             </div>
 
-            <button
+            {/* Submit Button */}
+            <motion.button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-2 bg-black text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full py-4 bg-red-600 text-white rounded-xl font-semibold text-sm hover:bg-red-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
             >
-              {isSubmitting ? 'Đang xử lý...' : 'Đăng ký'}
-            </button>
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Đang đăng ký...
+                </>
+              ) : (
+                <>
+                  Tạo tài khoản
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </>
+              )}
+            </motion.button>
 
+            {/* Login Link */}
             <p className="text-center text-sm text-gray-500 pt-2">
               Đã có tài khoản?{' '}
-              <Link href="/login" className="text-orange-500 font-medium hover:underline">
+              <Link href="/login" className="text-red-600 font-semibold hover:underline">
                 Đăng nhập ngay
               </Link>
             </p>
           </form>
-        </div>
+        </motion.div>
+
+        {/* Back to Home */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-center mt-6"
+        >
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            Quay lại trang chủ
+          </Link>
+        </motion.div>
       </div>
     </div>
   );
