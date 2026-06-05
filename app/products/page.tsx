@@ -32,14 +32,17 @@ export default function ProductsPage() {
   const router = useRouter();
   const keywordParam = searchParams.get('keyword') || '';
   const categoryParam = searchParams.get('category') || '';
+  const priceMinParam = searchParams.get('price_min') || '';
+  const priceMaxParam = searchParams.get('price_max') || '';
+  const sortParam = (searchParams.get('sort') || 'newest') as SortOption;
 
   const [page, setPage] = useState(Number(searchParams.get('page') || '1'));
 
   // Sidebar filter states
   const [sidebarKeyword, setSidebarKeyword] = useState(keywordParam);
-  const [priceMin, setPriceMin] = useState('');
-  const [priceMax, setPriceMax] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
+  const [priceMin, setPriceMin] = useState(priceMinParam);
+  const [priceMax, setPriceMax] = useState(priceMaxParam);
+  const [sortBy, setSortBy] = useState<SortOption>(sortParam);
   const [sidebarCategory, setSidebarCategory] = useState(categoryParam);
   const productGridRef = useRef<HTMLDivElement>(null);
   const prevCategoryRef = useRef(categoryParam);
@@ -73,10 +76,16 @@ export default function ProductsPage() {
     const newKeyword = searchParams.get('keyword') || '';
     const newCategory = searchParams.get('category') || '';
     const newPage = Number(searchParams.get('page') || '1');
+    const newPriceMin = searchParams.get('price_min') || '';
+    const newPriceMax = searchParams.get('price_max') || '';
+    const newSort = (searchParams.get('sort') || 'newest') as SortOption;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSidebarKeyword(newKeyword);
     setSidebarCategory(newCategory);
     setPage(newPage);
+    setPriceMin(newPriceMin);
+    setPriceMax(newPriceMax);
+    setSortBy(newSort);
   }, [searchParams]);
 
   const { data: categoriesData } = useQuery({
@@ -117,6 +126,9 @@ export default function ProductsPage() {
     const params = new URLSearchParams();
     if (sidebarKeyword) params.set('keyword', sidebarKeyword);
     if (sidebarCategory) params.set('category', sidebarCategory);
+    if (priceMin) params.set('price_min', priceMin);
+    if (priceMax) params.set('price_max', priceMax);
+    if (sortBy && sortBy !== 'newest') params.set('sort', sortBy);
     router.push(`/products${params.toString() ? `?${params}` : ''}`, { scroll: false });
   };
 
