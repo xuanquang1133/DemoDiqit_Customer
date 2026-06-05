@@ -10,6 +10,9 @@ export interface ProductListResponse {
     slug?: string;
   }>;
   total_pages: number;
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export type SortOption = 'newest' | 'price_asc' | 'price_desc' | 'name_asc' | 'name_desc';
@@ -20,8 +23,8 @@ export const productApi = {
     limit?: number;
     keyword?: string;
     category_ids?: string[];
-    price_min?: number;
-    price_max?: number;
+    price_min?: number | string;
+    price_max?: number | string;
     sort?: SortOption;
   }) {
     const query: Record<string, string | number | boolean> = { is_public: true };
