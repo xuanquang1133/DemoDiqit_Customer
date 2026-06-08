@@ -16,7 +16,7 @@ interface Product {
   name: string;
   price: number;
   thumbnail: string;
-  category?: { name: string };
+  category?: { id?: number; name?: string };
 }
 
 export default function ProductList({ keyword, categoryIds, page = 1 }: ProductListProps) {
@@ -58,7 +58,7 @@ export default function ProductList({ keyword, categoryIds, page = 1 }: ProductL
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-          {data?.total_pages > 1 && (
+          {data && data.total_pages > 1 && (
             <Pagination
               currentPage={data.page}
               totalPages={data.total_pages}
