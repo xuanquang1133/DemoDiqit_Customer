@@ -40,7 +40,7 @@ export default function Home() {
       <Banner />
 
       {/* Featured Products Section */}
-      <section className="section bg-white">
+      <section className="section bg-white !py-10 sm:!py-12 md:!py-16">
         <div className="container-custom">
           {/* Section Header */}
           <motion.div
@@ -48,11 +48,11 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12"
+            className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-4 mb-8 sm:mb-10 md:mb-12"
           >
             <div>
-              <span className="text-red-600 font-semibold text-sm tracking-wider uppercase">Bộ sưu tập</span>
-              <h2 className="section-title mt-2">Sản phẩm nổi bật</h2>
+              <span className="text-red-600 font-semibold text-xs sm:text-sm tracking-wider uppercase">Bộ sưu tập</span>
+              <h2 className="section-title mt-1 sm:mt-2">Sản phẩm nổi bật</h2>
               <p className="section-subtitle">Khám phá những sản phẩm được yêu thích nhất</p>
             </div>
             <Link
@@ -112,7 +112,7 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-black/20" />
 
-        <div className="container-custom relative z-10 flex items-end justify-center pb-16 md:pb-45 min-h-[500px]">
+        <div className="container-custom relative z-10 flex items-end justify-center pb-8 sm:pb-12 md:pb-16 min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -121,10 +121,10 @@ export default function Home() {
           >
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-red-600 rounded-full font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-xl text-lg"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-white text-red-600 rounded-full font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-xl text-sm sm:text-base md:text-lg"
             >
               <span>Mua ngay</span>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
@@ -133,9 +133,9 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="section bg-gray-50">
+      <section className="section bg-gray-50 !py-10 sm:!py-12 md:!py-16">
         <div className="container-custom">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {[
               {
                 icon: (
@@ -182,11 +182,11 @@ export default function Home() {
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="text-center group"
               >
-                <div className="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-4 text-gray-700 group-hover:bg-red-600 group-hover:text-white group-hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white rounded-xl sm:rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-3 sm:mb-4 text-gray-700 group-hover:bg-red-600 group-hover:text-white group-hover:shadow-xl transition-all duration-300">
                   {feature.icon}
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                <p className="text-sm text-gray-500">{feature.desc}</p>
+                <h3 className="font-semibold text-gray-900 mb-1 text-xs sm:text-sm md:text-base">{feature.title}</h3>
+                <p className="text-[10px] sm:text-xs md:text-sm text-gray-500">{feature.desc}</p>
               </motion.div>
             ))}
           </div>

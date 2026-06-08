@@ -222,7 +222,7 @@ html {
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 
-/* ===== Grid ===== */
+/* ===== Responsive Grid ===== */
 .grid-products {
   @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6;
 }
@@ -247,4 +247,68 @@ html {
   font-size: 14px;
   border-radius: 12px;
   padding: 12px 20px;
+}
+
+/* ===== Custom Breakpoints for iPad/Mobile ===== */
+/* Note: Use md: (768px+) and lg: (1024px+) as standard Tailwind breakpoints */
+/* For custom iPad-specific styles, use regular CSS @media queries below */
+
+@layer base {
+  /* Safe area insets for notched devices */
+  :root {
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-inset-left: env(safe-area-inset-left, 0px);
+    --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  }
+}
+
+/* ===== Cart Drawer (Mobile) ===== */
+@media (max-width: 767px) {
+  .cart-drawer {
+    width: 100vw !important;
+  }
+}
+
+/* ===== Table horizontal scroll on mobile ===== */
+@media (max-width: 639px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===== Input touch optimization for mobile ===== */
+@media (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
+
+/* ===== Responsive text sizing for mobile ===== */
+@media (max-width: 639px) {
+  .text-responsive-hero {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* ===== iPad specific overrides ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hide-on-ipad {
+    display: none !important;
+  }
+}
+
+/* ===== Fix for mobile sticky bottom bar ===== */
+@media (max-width: 767px) {
+  .mobile-bottom-bar {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+  }
 }
