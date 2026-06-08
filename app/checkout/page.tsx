@@ -162,21 +162,21 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 md:pt-20">
-      <div className="container-custom py-8">
+    <div className="min-h-screen bg-gray-50 pt-16 md:pt-20 pb-20 sm:pb-0">
+      <div className="container-custom py-6 sm:py-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Thanh toán</h1>
-          <p className="text-gray-500 mt-2">Vui lòng điền thông tin giao hàng để hoàn tất đơn hàng</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Thanh toán</h1>
+          <p className="text-gray-500 mt-1 sm:mt-2 text-sm">Vui lòng điền thông tin giao hàng để hoàn tất đơn hàng</p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Left: Shipping Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -187,10 +187,10 @@ export default function CheckoutPage() {
                 <h2 className="font-semibold text-sm text-white">Thông tin giao hàng</h2>
               </div>
 
-              <div className="p-6 space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                       Họ tên <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -199,19 +199,19 @@ export default function CheckoutPage() {
                       value={formData.customer_name}
                       onChange={handleInputChange}
                       placeholder="Nhập họ tên của bạn"
-                      className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                      className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
                         errors.customer_name
                           ? 'border-red-300 bg-red-50 focus:border-red-400'
                           : 'border-gray-100 focus:border-red-400 focus:bg-white'
                       }`}
                     />
                     {errors.customer_name && (
-                      <p className="text-red-500 text-xs mt-1.5">{errors.customer_name}</p>
+                      <p className="text-red-500 text-xs mt-1">{errors.customer_name}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -220,20 +220,20 @@ export default function CheckoutPage() {
                       value={formData.customer_email}
                       onChange={handleInputChange}
                       placeholder="email@example.com"
-                      className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                      className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
                         errors.customer_email
                           ? 'border-red-300 bg-red-50 focus:border-red-400'
                           : 'border-gray-100 focus:border-red-400 focus:bg-white'
                       }`}
                     />
                     {errors.customer_email && (
-                      <p className="text-red-500 text-xs mt-1.5">{errors.customer_email}</p>
+                      <p className="text-red-500 text-xs mt-1">{errors.customer_email}</p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                     Số điện thoại <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -242,19 +242,19 @@ export default function CheckoutPage() {
                     value={formData.customer_phone}
                     onChange={handleInputChange}
                     placeholder="0xxxxxxxxx"
-                    className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
                       errors.customer_phone
                         ? 'border-red-300 bg-red-50 focus:border-red-400'
                         : 'border-gray-100 focus:border-red-400 focus:bg-white'
                     }`}
                   />
                   {errors.customer_phone && (
-                    <p className="text-red-500 text-xs mt-1.5">{errors.customer_phone}</p>
+                    <p className="text-red-500 text-xs mt-1">{errors.customer_phone}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                     Địa chỉ giao hàng <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -263,19 +263,19 @@ export default function CheckoutPage() {
                     value={formData.shipping_address}
                     onChange={handleInputChange}
                     placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
-                    className={`w-full px-4 py-3.5 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
+                    className={`w-full px-4 py-3 bg-gray-50 border-2 rounded-xl text-sm focus:outline-none transition-all ${
                       errors.shipping_address
                         ? 'border-red-300 bg-red-50 focus:border-red-400'
                         : 'border-gray-100 focus:border-red-400 focus:bg-white'
                     }`}
                   />
                   {errors.shipping_address && (
-                    <p className="text-red-500 text-xs mt-1.5">{errors.shipping_address}</p>
+                    <p className="text-red-500 text-xs mt-1">{errors.shipping_address}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                     Ghi chú (tùy chọn)
                   </label>
                   <textarea
@@ -284,7 +284,7 @@ export default function CheckoutPage() {
                     onChange={handleInputChange}
                     placeholder="Ghi chú cho đơn hàng (ví dụ: giao giờ hành chính, gọi trước khi giao...)"
                     rows={3}
-                    className="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all resize-none"
+                    className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-100 rounded-xl text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all resize-none"
                   />
                 </div>
               </div>
@@ -295,7 +295,7 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
               <Link
                 href="/cart"

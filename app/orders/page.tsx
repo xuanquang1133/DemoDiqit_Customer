@@ -81,11 +81,11 @@ export default function OrdersPage() {
   if (!_hasHydrated || !token || !user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+    <div className="min-h-screen bg-gray-50 pt-20 sm:pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Lịch sử đơn hàng</h1>
-          <p className="text-sm text-gray-500 mt-1">Tổng cộng {total} đơn hàng</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Lịch sử đơn hàng</h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">Tổng cộng {total} đơn hàng</p>
         </div>
 
         {loading ? (
@@ -111,55 +111,55 @@ export default function OrdersPage() {
               return (
                 <div
                   key={order.id}
-                  className="bg-white rounded-2xl border p-5 hover:shadow-sm transition-shadow cursor-pointer"
+                  className="bg-white rounded-xl sm:rounded-2xl border p-4 sm:p-5 hover:shadow-sm transition-shadow cursor-pointer"
                   onClick={() => router.push(`/orders/${order.id}`)}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="font-semibold text-gray-900">{order.order_number}</span>
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status.bg} ${status.text}`}>
+                  <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
+                    <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                      <span className="font-semibold text-gray-900 text-sm sm:text-base">{order.order_number}</span>
+                      <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${status.bg} ${status.text}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
                         {status.label}
                       </span>
                     </div>
-                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                   </div>
 
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-xs sm:text-sm">
                     <span className="text-gray-500">{formatDate(order.created_at)}</span>
                     <span className="font-bold text-gray-900">{formatPrice(order.total_amount)}</span>
                   </div>
 
                   {order.order_items && order.order_items.length > 0 && (
-                    <div className="mt-3 flex gap-2 overflow-hidden">
+                    <div className="mt-2.5 sm:mt-3 flex gap-2 overflow-hidden">
                       {order.order_items.slice(0, 4).map((item) => (
                         <div key={item.id} className="flex-shrink-0">
                           {item.product_thumbnail ? (
                             <Image
                               src={item.product_thumbnail}
                               alt={item.product_name}
-                              width={48}
-                              height={48}
-                              className="w-12 h-12 object-cover rounded-lg border"
+                              width={40}
+                              height={40}
+                              className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border"
                             />
                           ) : (
-                            <div className="w-12 h-12 rounded-lg border bg-gray-100 flex items-center justify-center text-xs text-gray-400">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border bg-gray-100 flex items-center justify-center text-[10px] sm:text-xs text-gray-400 font-medium">
                               KP
                             </div>
                           )}
                         </div>
                       ))}
                       {order.order_items.length > 4 && (
-                        <div className="w-12 h-12 rounded-lg border bg-gray-50 flex items-center justify-center text-xs text-gray-500 font-medium">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border bg-gray-50 flex items-center justify-center text-[10px] sm:text-xs text-gray-500 font-medium">
                           +{order.order_items.length - 4}
                         </div>
                       )}
                     </div>
                   )}
 
-                  <div className="mt-3 text-xs text-gray-400">
+                  <div className="mt-2 sm:mt-3 text-[10px] sm:text-xs text-gray-400">
                     {order.items_count} sản phẩm
                     {order.customer_name && ` — ${order.customer_name}`}
                   </div>

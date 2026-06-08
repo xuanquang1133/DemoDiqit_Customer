@@ -166,14 +166,32 @@ function ProductsPageContent() {
       {/* Banner Section */}
       <Banner />
 
-      <div className="container-custom py-6">
-        <div className="flex gap-8">
-          {/* Left Sidebar - Sticky Filter */}
-          <aside className="hidden lg:block w-72 flex-shrink-0">
+      <div className="container-custom py-4 sm:py-6">
+        {/* Mobile Filter Toggle */}
+        <div className="lg:hidden mb-4">
+          <button
+            onClick={() => {
+              const sidebar = document.getElementById('mobile-filter-sidebar');
+              if (sidebar) {
+                sidebar.classList.toggle('hidden');
+              }
+            }}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Bộ lọc & Sắp xếp
+          </button>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
+          {/* Left Sidebar - Desktop: sticky; Mobile: collapsible */}
+          <aside id="mobile-filter-sidebar" className="hidden lg:block lg:w-72 lg:flex-shrink-0">
             <div className="sticky top-24">
               {/* Filter Header */}
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Bộ lọc</h2>
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-base sm:text-lg font-bold text-gray-900">Bộ lọc</h2>
                 {(sidebarKeyword || sidebarCategory || priceMin || priceMax || sortBy !== 'newest') && (
                   <button
                     onClick={handleClear}
@@ -185,15 +203,15 @@ function ProductsPageContent() {
               </div>
 
               {/* Search by Name */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-800 mb-3">Tìm theo tên</h3>
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-sm font-semibold text-gray-800 mb-2 sm:mb-3">Tìm theo tên</h3>
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Nhập tên sản phẩm..."
                     value={sidebarKeyword}
                     onChange={(e) => setSidebarKeyword(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all"
+                    className="w-full pl-9 pr-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all"
                   />
                   <svg
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
@@ -208,13 +226,13 @@ function ProductsPageContent() {
               </div>
 
               {/* Filter by Category */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-800 mb-3">Danh mục</h3>
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-sm font-semibold text-gray-800 mb-2 sm:mb-3">Danh mục</h3>
                 <div className="relative">
                   <select
                     value={sidebarCategory}
                     onChange={(e) => handleSidebarCategoryChange(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all appearance-none cursor-pointer"
+                    className="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all appearance-none cursor-pointer"
                   >
                     <option value="">Tất cả</option>
                     {categories.map((cat) => (
@@ -236,15 +254,15 @@ function ProductsPageContent() {
               </div>
 
               {/* Filter by Price */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-800 mb-3">Khoảng giá</h3>
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-sm font-semibold text-gray-800 mb-2 sm:mb-3">Khoảng giá</h3>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
                     placeholder="Từ"
                     value={priceMin}
                     onChange={(e) => setPriceMin(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all"
+                    className="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all"
                   />
                   <span className="text-gray-400">-</span>
                   <input
@@ -252,12 +270,12 @@ function ProductsPageContent() {
                     placeholder="Đến"
                     value={priceMax}
                     onChange={(e) => setPriceMax(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all"
+                    className="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all"
                   />
                 </div>
                 <button
                   onClick={handleApplySidebarFilters}
-                  className="w-full mt-3 px-4 py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                  className="w-full mt-3 px-4 py-2 sm:py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   Áp dụng
                 </button>
@@ -265,12 +283,12 @@ function ProductsPageContent() {
 
               {/* Sort */}
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-800 mb-3">Sắp xếp</h3>
+                <h3 className="text-sm font-semibold text-gray-800 mb-2 sm:mb-3">Sắp xếp</h3>
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as SortOption)}
-                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all appearance-none cursor-pointer"
+                    className="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 focus:bg-white transition-all appearance-none cursor-pointer"
                   >
                     {SORT_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -292,13 +310,81 @@ function ProductsPageContent() {
             </div>
           </aside>
 
+          {/* Mobile Filter Panel - shown when toggled */}
+          <aside id="mobile-filter-sidebar-panel" className="lg:hidden hidden">
+            <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-900">Bộ lọc</h2>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('mobile-filter-sidebar-panel');
+                    if (el) el.classList.add('hidden');
+                  }}
+                  className="p-2 text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              {/* Mobile filter content mirrors desktop sidebar */}
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Tìm theo tên</h3>
+                <input
+                  type="text"
+                  placeholder="Nhập tên sản phẩm..."
+                  value={sidebarKeyword}
+                  onChange={(e) => setSidebarKeyword(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400"
+                />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Danh mục</h3>
+                <select
+                  value={sidebarCategory}
+                  onChange={(e) => handleSidebarCategoryChange(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 appearance-none"
+                >
+                  <option value="">Tất cả</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={String(cat.id)}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Khoảng giá</h3>
+                <div className="flex items-center gap-2">
+                  <input type="number" placeholder="Từ" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} className="flex-1 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400" />
+                  <span className="text-gray-400">-</span>
+                  <input type="number" placeholder="Đến" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} className="flex-1 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400" />
+                </div>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800 mb-3">Sắp xếp</h3>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 appearance-none"
+                >
+                  {SORT_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-3">
+                <button onClick={handleClear} className="flex-1 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">Xóa</button>
+                <button onClick={handleApplySidebarFilters} className="flex-1 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-gray-800">Áp dụng</button>
+              </div>
+            </div>
+          </aside>
+
           {/* Main Content */}
           <div className="flex-1 min-w-0" ref={productGridRef}>
             {/* Products Grid */}
-            <section className="section">
+            <section className="section !py-4 sm:!py-6">
               <div>
                 {/* Results Info */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
                   <p className="text-sm text-gray-500">
                     {isLoading ? (
                       'Đang tải...'
@@ -309,12 +395,12 @@ function ProductsPageContent() {
                       </>
                     )}
                   </p>
-                  <div className="hidden lg:flex items-center gap-4">
-                    {/* Sort Dropdown - Desktop */}
+                  {/* Sort Dropdown - Mobile */}
+                  <div className="lg:hidden w-full sm:w-auto">
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as SortOption)}
-                      className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 transition-all appearance-none cursor-pointer"
+                      className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-red-400 transition-all appearance-none cursor-pointer"
                     >
                       {SORT_OPTIONS.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -332,17 +418,17 @@ function ProductsPageContent() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-20"
+                    className="text-center py-16 sm:py-20"
                   >
-                    <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-10 h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                       </svg>
                     </div>
-                    <p className="text-gray-600 text-lg mb-4">Đã xảy ra lỗi khi tải sản phẩm</p>
+                    <p className="text-gray-600 text-base sm:text-lg mb-4">Đã xảy ra lỗi khi tải sản phẩm</p>
                     <button
                       onClick={() => window.location.reload()}
-                      className="px-6 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors"
+                      className="px-6 py-2.5 sm:py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-sm"
                     >
                       Thử lại
                     </button>
@@ -351,18 +437,18 @@ function ProductsPageContent() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-20"
+                    className="text-center py-12 sm:py-16 md:py-20"
                   >
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                       </svg>
                     </div>
-                    <p className="text-gray-600 text-lg mb-2">Không tìm thấy sản phẩm nào</p>
+                    <p className="text-gray-600 text-base sm:text-lg mb-2">Không tìm thấy sản phẩm nào</p>
                     <p className="text-gray-400 text-sm mb-6">Thử tìm kiếm với từ khóa khác</p>
                     <button
                       onClick={handleClear}
-                      className="px-6 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors"
+                      className="px-6 py-2.5 sm:py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-sm"
                     >
                       Xem tất cả sản phẩm
                     </button>
@@ -372,7 +458,7 @@ function ProductsPageContent() {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid-products"
+                    className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6"
                   >
                     {products.map((product: Product, index: number) => (
                       <ProductCard key={product.id} product={product} index={index} />
@@ -382,7 +468,7 @@ function ProductsPageContent() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="mt-12 flex justify-center">
+                  <div className="mt-8 sm:mt-12 flex justify-center">
                     <Pagination
                       currentPage={page}
                       totalPages={totalPages}
