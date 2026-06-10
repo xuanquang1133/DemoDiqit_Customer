@@ -87,8 +87,7 @@ export default function OrderDetailPage() {
     setCancelling(true);
     try {
       const res = await orderApi.cancelMyOrder(order.id);
-      const result = res as { message: string; data: OrderResponse };
-      setOrder(result.data);
+      setOrder(res);
       toast.success('Đơn hàng đã được hủy');
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
