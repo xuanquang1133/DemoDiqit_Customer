@@ -105,14 +105,25 @@ export default function Home() {
       </section>
 
       {/* Promo Banner Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden promo-banner-section">
+        {/* Mobile banner (phones) */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat md:hidden"
+          style={{ backgroundImage: "url('/banners/BottomBannerMobile.png')" }}
+        />
+        {/* iPad Mini & Air banner (tablets portrait 768px - 1023px) */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block xl:hidden"
+          style={{ backgroundImage: "url('/banners/BottomBannerIpad.png')" }}
+        />
+        {/* Desktop / iPad Pro landscape (1024px+) */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden xl:block"
           style={{ backgroundImage: "url('/banners/anh3.jpg')" }}
         />
         <div className="absolute inset-0 bg-black/20" />
 
-        <div className="container-custom relative z-10 flex items-end justify-center pb-8 sm:pb-12 md:pb-16 min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
+        <div className="container-custom hero-banner-cta relative z-10 flex items-end justify-center pb-8 sm:pb-12 md:pb-[100px] lg:pb-[190px] min-h-[600px] sm:min-h-[600px] md:min-h-screen">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
