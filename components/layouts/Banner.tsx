@@ -3,22 +3,88 @@
 
 import Image from 'next/image';
 import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
-const IMAGES = [
+const DESKTOP_IMAGES = [
   { src: '/banners/Banner-1.png', alt: 'Banner 1' },
   { src: '/banners/Banner-2.png', alt: 'Banner 2' },
   { src: '/banners/Banner-3.png', alt: 'Banner 3' },
 ];
 
+const IPAD_MINI_IMAGES = [
+  { src: '/banners/Banner1-Ipad-Mini.png', alt: 'Banner iPad Mini 1' },
+  { src: '/banners/Banner2-Ipad-Mini.png', alt: 'Banner iPad Mini 2' },
+  { src: '/banners/Banner3-Ipad-Mini.png', alt: 'Banner iPad Mini 3' },
+];
+
+const IPAD_AIR_IMAGES = [
+  { src: '/banners/Banner1-Ipad-Air.png', alt: 'Banner iPad Air 1' },
+  { src: '/banners/Banner2-Ipad-Air.png', alt: 'Banner iPad Air 2' },
+  { src: '/banners/Banner3-Ipad-Air.png', alt: 'Banner iPad Air 3' },
+];
+
+const IPAD_PRO_IMAGES = [
+  { src: '/banners/Banner1-Ipad-Pro.png', alt: 'Banner iPad Pro 1' },
+  { src: '/banners/Banner2-Ipad-Pro.png', alt: 'Banner iPad Pro 2' },
+  { src: '/banners/Banner3-Ipad-Pro.png', alt: 'Banner iPad Pro 3' },
+];
+
+const MOBILE_IMAGES = [
+  { src: '/banners/Banner1-Mobile-All.png', alt: 'Banner Mobile 1' },
+  { src: '/banners/Banner2-Mobile-All.png', alt: 'Banner Mobile 2' },
+  { src: '/banners/Banner3-Mobile-All.png', alt: 'Banner Mobile 3' },
+];
+
 const DISPLAY_DURATION = 5000;
+
+type IpadVariant = 'mini' | 'air' | 'pro';
+
+function BannerSlide({ src, alt, contain = false, active = true }: {
+  src: string;
+  alt: string;
+  contain?: boolean;
+  active?: boolean;
+}) {
+  return (
+    <div
+      className="absolute inset-0 flex items-center justify-center transition-opacity duration-800 ease-in-out"
+      style={{ opacity: active ? 1 : 0 }}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority
+        className={contain ? 'object-contain' : 'object-cover'}
+        sizes="100vw"
+        suppressHydrationWarning
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
+    </div>
+  );
+}
+
+function getIpadVariant(width: number): IpadVariant {
+  if (width <= 768) return 'mini';
+  if (width <= 820) return 'air';
+  return 'pro';
+}
 
 export default function Banner() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [ipadVariant, setIpadVariant] = useState<IpadVariant>('air');
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % IMAGES.length);
+    setCurrentIndex((prev) => (prev + 1) % MOBILE_IMAGES.length);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIpadVariant(getIpadVariant(window.innerWidth));
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -26,41 +92,73 @@ export default function Banner() {
     return () => clearInterval(timer);
   }, [goToNext]);
 
-  return (
-    <div className="relative w-full h-[60vh] sm:h-[70vh] md:h-[85vh] lg:h-screen overflow-hidden bg-gradient-to-r from-gray-900 to-gray-800">
-      {/* Main Banner Container */}
-      <div className="relative w-full h-full group">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: 'easeInOut' }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={IMAGES[currentIndex].src}
-              alt={IMAGES[currentIndex].alt}
-              fill
-              priority
-              className="object-cover"
-              sizes="100vw"
-              suppressHydrationWarning
-            />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-          </motion.div>
-        </AnimatePresence>
+  const SLIDE_COUNT = MOBILE_IMAGES.length;
 
-        {/* Content Overlay - Always visible on mobile, on hover for desktop */}
-        <div className="absolute inset-0 flex items-end sm:items-center">
+  const currentIpadImages =
+    ipadVariant === 'mini'
+      ? IPAD_MINI_IMAGES
+      : ipadVariant === 'air'
+      ? IPAD_AIR_IMAGES
+      : IPAD_PRO_IMAGES;
+
+  return (
+    <div className="relative w-full h-[60vh] sm:h-[70vh] md:h-[85vh] lg:h-[85vh] xl:h-[85vh] 2xl:h-screen overflow-hidden bg-gray-900">
+      <div className="relative w-full h-full group">
+
+        {/* ===== iPad banners (md to xl: 768px - 1279px) ===== */}
+        <div className="absolute inset-0 hidden md:block xl:hidden" aria-hidden="true">
+          {currentIpadImages.map((img, i) => (
+            <BannerSlide
+              key={`ipad-${i}`}
+              src={img.src}
+              alt={img.alt}
+              contain
+              active={i === currentIndex}
+            />
+          ))}
+        </div>
+
+        {/* ===== iPad Pro banners (xl to 2xl: 1280px - 1535px) ===== */}
+        <div className="absolute inset-0 hidden xl:block 2xl:hidden" aria-hidden="true">
+          {currentIpadImages.map((img, i) => (
+            <BannerSlide
+              key={`ipad-pro-${i}`}
+              src={img.src}
+              alt={img.alt}
+              contain
+              active={i === currentIndex}
+            />
+          ))}
+        </div>
+
+        {/* ===== Desktop banners (2xl+: 1536px+) ===== */}
+        <div className="absolute inset-0 hidden 2xl:block" aria-hidden="true">
+          {DESKTOP_IMAGES.map((img, i) => (
+            <BannerSlide
+              key={`desktop-${i}`}
+              src={img.src}
+              alt={img.alt}
+              active={i === currentIndex}
+            />
+          ))}
+        </div>
+
+        {/* ===== Mobile banners (< md: < 768px) ===== */}
+        <div className="absolute inset-0 md:hidden" aria-hidden="true">
+          {MOBILE_IMAGES.map((img, i) => (
+            <BannerSlide
+              key={`mobile-${i}`}
+              src={img.src}
+              alt={img.alt}
+              active={i === currentIndex}
+            />
+          ))}
+        </div>
+
+        {/* ===== Content Overlay ===== */}
+        <div className="absolute inset-0 flex items-end 2xl:items-center z-10">
           <div className="container-custom w-full">
-            {/* Mobile: always visible */}
-            <div
-              key={`mobile-${currentIndex}`}
-              className="sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-500 ease-in-out pb-6 sm:pb-0"
-            >
+            <div className="pb-6 2xl:pb-0">
               <span className="inline-block px-3 py-1 sm:px-4 sm:py-1.5 bg-red-600 text-white text-xs sm:text-sm font-semibold rounded-full mb-3 sm:mb-4">
                 Summer Sale
               </span>
@@ -69,7 +167,7 @@ export default function Banner() {
                 <br />
                 <span className="text-red-500">Phong cách mới</span>
               </h2>
-              <p className="text-white/80 text-sm sm:text-base md:text-lg mb-5 sm:mb-8 max-w-md hidden sm:block">
+              <p className="text-white/80 text-sm sm:text-base md:text-lg mb-5 sm:mb-8 max-w-md">
                 Cập nhật xu hướng thời trang mới nhất với bộ sưu tập độc quyền
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -93,9 +191,9 @@ export default function Banner() {
           </div>
         </div>
 
-        {/* Navigation Dots */}
-        <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3">
-          {IMAGES.map((_, index) => (
+        {/* ===== Navigation Dots ===== */}
+        <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3 z-10">
+          {Array.from({ length: SLIDE_COUNT }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
@@ -109,10 +207,10 @@ export default function Banner() {
           ))}
         </div>
 
-        {/* Navigation Arrows - Desktop only */}
+        {/* ===== Navigation Arrows (tablet+ only) ===== */}
         <button
-          onClick={() => setCurrentIndex((prev) => (prev - 1 + IMAGES.length) % IMAGES.length)}
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 hidden md:flex"
+          onClick={() => setCurrentIndex((prev) => (prev - 1 + SLIDE_COUNT) % SLIDE_COUNT)}
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 z-10 hidden md:flex"
           aria-label="Previous slide"
         >
           <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -120,8 +218,8 @@ export default function Banner() {
           </svg>
         </button>
         <button
-          onClick={() => setCurrentIndex((prev) => (prev + 1) % IMAGES.length)}
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 hidden md:flex"
+          onClick={() => setCurrentIndex((prev) => (prev + 1) % SLIDE_COUNT)}
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 z-10 hidden md:flex"
           aria-label="Next slide"
         >
           <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

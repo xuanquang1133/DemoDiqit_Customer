@@ -253,6 +253,50 @@ html {
 /* Note: Use md: (768px+) and lg: (1024px+) as standard Tailwind breakpoints */
 /* For custom iPad-specific styles, use regular CSS @media queries below */
 
+/* Mobile (< md): all phones from ~375px to 767px */
+@media (max-width: 767px) {
+  .hero-banner-cta {
+    padding-bottom: 180px !important;
+  }
+  .promo-banner-section {
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+  }
+}
+
+/* iPad Mini: 768px - 819px */
+@media (min-width: 768px) and (max-width: 819px) {
+  .hero-banner-cta {
+    padding-bottom: 140px !important;
+  }
+  .promo-banner-section {
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+  }
+}
+
+/* iPad Air: 820px - 1023px */
+@media (min-width: 820px) and (max-width: 1023px) {
+  .hero-banner-cta {
+    padding-bottom: 120px !important;
+  }
+  .promo-banner-section {
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+  }
+}
+
+/* iPad Pro / Desktop: 1024px+ */
+@media (min-width: 1024px) {
+  .hero-banner-cta {
+    padding-bottom: 550px !important;
+  }
+  .promo-banner-section {
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+  }
+}
+
 @layer base {
   /* Safe area insets for notched devices */
   :root {
