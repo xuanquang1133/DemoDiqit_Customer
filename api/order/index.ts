@@ -64,7 +64,7 @@ export const orderApi = {
     return axiosClient.get<OrderResponse>(`/my-orders/${id}`).then(res => res.data);
   },
 
-  cancelMyOrder(id: number) {
-    return axiosClient.post<OrderResponse>(`/my-orders/${id}/cancel`).then(res => res.data);
+  cancelMyOrder(id: number): Promise<OrderResponse> {
+    return axiosClient.post<unknown, { message: string; data: OrderResponse }>(`/my-orders/${id}/cancel`).then(res => res.data);
   },
 };
