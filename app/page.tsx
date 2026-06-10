@@ -109,38 +109,19 @@ export default function Home() {
         {/* Mobile banner (phones) */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat md:hidden"
-          style={{ backgroundImage: "url('/banners/BottomBannerMobile.png')" }}
+          style={{ backgroundImage: "url('/banners/BottomBannerMobile.png')", backgroundPosition: "center 20%" }}
         />
         {/* iPad Mini & Air banner (tablets portrait 768px - 1023px) */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block xl:hidden"
-          style={{ backgroundImage: "url('/banners/BottomBannerIpad.png')" }}
+          style={{ backgroundImage: "url('/banners/BottomBannerIpad.png')", backgroundPosition: "center 20%" }}
         />
         {/* Desktop / iPad Pro landscape (1024px+) */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden xl:block"
-          style={{ backgroundImage: "url('/banners/anh3.jpg')" }}
+          style={{ backgroundImage: "url('/banners/anh3.jpg')", backgroundPosition: "center 20%" }}
         />
         <div className="absolute inset-0 bg-black/20" />
-
-        <div className="container-custom hero-banner-cta relative z-10 flex items-end justify-center pb-8 sm:pb-12 md:pb-[100px] lg:pb-[190px] min-h-[600px] sm:min-h-[600px] md:min-h-screen">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-white text-red-600 rounded-full font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-105 hover:shadow-xl text-sm sm:text-base md:text-lg"
-            >
-              <span>Mua ngay</span>
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
-          </motion.div>
-        </div>
       </section>
 
       {/* Features Section */}

@@ -256,44 +256,44 @@ html {
 /* Mobile (< md): all phones from ~375px to 767px */
 @media (max-width: 767px) {
   .hero-banner-cta {
-    padding-bottom: 180px !important;
+    padding-bottom: 30px !important;
   }
   .promo-banner-section {
-    min-height: 100vh !important;
-    max-height: 100vh !important;
+    min-height: 50vh !important;
+    max-height: 50vh !important;
   }
 }
 
 /* iPad Mini: 768px - 819px */
 @media (min-width: 768px) and (max-width: 819px) {
   .hero-banner-cta {
-    padding-bottom: 140px !important;
+    padding-bottom: 50px !important;
   }
   .promo-banner-section {
-    min-height: 100vh !important;
-    max-height: 100vh !important;
+    min-height: 55vh !important;
+    max-height: 55vh !important;
   }
 }
 
 /* iPad Air: 820px - 1023px */
 @media (min-width: 820px) and (max-width: 1023px) {
   .hero-banner-cta {
-    padding-bottom: 120px !important;
+    padding-bottom: 60px !important;
   }
   .promo-banner-section {
-    min-height: 100vh !important;
-    max-height: 100vh !important;
+    min-height: 60vh !important;
+    max-height: 60vh !important;
   }
 }
 
 /* iPad Pro / Desktop: 1024px+ */
 @media (min-width: 1024px) {
   .hero-banner-cta {
-    padding-bottom: 550px !important;
+    padding-bottom: 80px !important;
   }
   .promo-banner-section {
-    min-height: 100vh !important;
-    max-height: 100vh !important;
+    min-height: 65vh !important;
+    max-height: 65vh !important;
   }
 }
 
